@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="look2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f0e8"/>
+      <stop offset="100%" style="stop-color:#ebe0d0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#look2)"/>
+  <rect x="100" y="100" width="150" height="300" rx="20" fill="#1a1a1a"/>
+  <rect x="280" y="120" width="150" height="280" rx="20" fill="#666"/>
+  <rect x="460" y="100" width="150" height="300" rx="20" fill="#deccb3"/>
+  <text x="400" y="450" text-anchor="middle" font-family="serif" font-size="24" fill="#666">Everyday Essentials</text>
+</svg>
+

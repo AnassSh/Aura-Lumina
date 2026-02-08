@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="beauty6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7"/>
+      <stop offset="100%" style="stop-color:#f8ecd2"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#beauty6)"/>
+  <ellipse cx="300" cy="300" rx="100" ry="60" fill="#d4a84b" opacity="0.5"/>
+  <circle cx="500" cy="280" r="70" fill="#50c878" opacity="0.4"/>
+  <rect x="320" y="360" width="160" height="80" rx="40" fill="#fff" stroke="#deccb3" stroke-width="2"/>
+  <text x="400" y="520" text-anchor="middle" font-family="serif" font-size="24" fill="#666">DIY Face Masks</text>
+</svg>
+

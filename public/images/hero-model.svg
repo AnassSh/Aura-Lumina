@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f0e8"/>
+      <stop offset="50%" style="stop-color:#fecdd3" stop-opacity="0.5"/>
+      <stop offset="100%" style="stop-color:#f8ecd2"/>
+    </linearGradient>
+    <linearGradient id="abayaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#383838"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#heroGrad)"/>
+  <circle cx="300" cy="180" r="80" fill="#deccb3"/>
+  <ellipse cx="300" cy="500" rx="150" ry="280" fill="url(#abayaGrad)"/>
+  <circle cx="430" cy="250" r="40" fill="#d4a84b" opacity="0.3"/>
+  <circle cx="170" cy="400" r="30" fill="#fda4af" opacity="0.3"/>
+  <rect x="220" y="220" width="160" height="100" rx="10" fill="#1a1a1a"/>
+</svg>
+

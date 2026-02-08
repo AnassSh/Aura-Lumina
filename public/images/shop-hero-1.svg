@@ -1,0 +1,44 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#F5F0E8"/>
+  
+  <!-- Background gradient -->
+  <rect width="800" height="600" fill="url(#shop1_gradient)"/>
+  
+  <!-- Boutique interior elements -->
+  <rect x="50" y="100" width="300" height="400" rx="20" fill="#FFFFFF" opacity="0.3"/>
+  <rect x="450" y="100" width="300" height="400" rx="20" fill="#FFFFFF" opacity="0.3"/>
+  
+  <!-- Hanging abayas -->
+  <ellipse cx="150" cy="180" rx="40" ry="15" fill="#1A1A1A" opacity="0.8"/>
+  <path d="M110 180 L110 380 Q150 400 190 380 L190 180" fill="#1A1A1A" opacity="0.6"/>
+  
+  <ellipse cx="250" cy="200" rx="35" ry="12" fill="#722F37" opacity="0.8"/>
+  <path d="M215 200 L215 370 Q250 390 285 370 L285 200" fill="#722F37" opacity="0.6"/>
+  
+  <ellipse cx="550" cy="180" rx="40" ry="15" fill="#D4A84B" opacity="0.8"/>
+  <path d="M510 180 L510 380 Q550 400 590 380 L590 180" fill="#D4A84B" opacity="0.6"/>
+  
+  <ellipse cx="650" cy="200" rx="35" ry="12" fill="#915F6D" opacity="0.8"/>
+  <path d="M615 200 L615 370 Q650 390 685 370 L685 200" fill="#915F6D" opacity="0.6"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="400" cy="300" r="80" fill="#D4A84B" opacity="0.2"/>
+  <circle cx="400" cy="300" r="60" fill="#D4A84B" opacity="0.3"/>
+  
+  <!-- Floor pattern -->
+  <rect x="0" y="520" width="800" height="80" fill="#DED0C0"/>
+  <line x1="0" y1="520" x2="800" y2="520" stroke="#C9B69C" stroke-width="2"/>
+  
+  <!-- Chandelier -->
+  <circle cx="400" cy="50" r="30" fill="#D4A84B" opacity="0.4"/>
+  <line x1="400" y1="0" x2="400" y2="20" stroke="#D4A84B" stroke-width="3"/>
+  
+  <defs>
+    <linearGradient id="shop1_gradient" x1="0" y1="0" x2="800" y2="600">
+      <stop offset="0%" stop-color="#FAF8F5"/>
+      <stop offset="50%" stop-color="#F5F0E8"/>
+      <stop offset="100%" stop-color="#EBE0D0"/>
+    </linearGradient>
+  </defs>
+</svg>
+

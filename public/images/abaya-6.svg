@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="533" viewBox="0 0 400 533">
+  <rect width="400" height="533" fill="#f5f0e8"/>
+  <ellipse cx="200" cy="350" rx="100" ry="180" fill="#1a1a1a"/>
+  <circle cx="200" cy="150" r="50" fill="#deccb3"/>
+  <text x="200" y="500" text-anchor="middle" font-family="serif" font-size="16" fill="#666">Classic Black</text>
+</svg>
+

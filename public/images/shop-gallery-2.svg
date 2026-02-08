@@ -1,0 +1,21 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#FAF8F5"/>
+  
+  <!-- Fitting room -->
+  <rect x="50" y="30" width="300" height="320" rx="15" fill="#FFFFFF" opacity="0.6"/>
+  
+  <!-- Mirror frame -->
+  <rect x="100" y="50" width="200" height="280" rx="10" fill="#D4A84B" opacity="0.3"/>
+  <rect x="110" y="60" width="180" height="260" rx="8" fill="#E8E8E8"/>
+  
+  <!-- Curtain -->
+  <rect x="310" y="50" width="40" height="280" fill="#722F37" opacity="0.4"/>
+  <rect x="50" y="50" width="40" height="280" fill="#722F37" opacity="0.4"/>
+  
+  <!-- Decorative stool -->
+  <ellipse cx="200" cy="360" rx="50" ry="15" fill="#D4A84B" opacity="0.5"/>
+  <rect x="170" y="340" width="60" height="20" rx="5" fill="#795940"/>
+  
+  <text x="200" y="390" text-anchor="middle" font-family="serif" font-size="14" fill="#666">Private Fitting</text>
+</svg>
+

@@ -1,0 +1,9 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F5F0E8"/>
+  <rect x="50" y="50" width="300" height="300" rx="20" fill="#36454F"/>
+  <circle cx="200" cy="180" r="5" fill="#888"/>
+  <circle cx="200" cy="210" r="5" fill="#888"/>
+  <circle cx="200" cy="240" r="5" fill="#888"/>
+  <text x="200" y="320" text-anchor="middle" font-family="serif" font-size="14" fill="#DDD">Magnetic Closures</text>
+</svg>
+

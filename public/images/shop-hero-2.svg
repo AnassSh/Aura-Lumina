@@ -1,0 +1,48 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#FFF1F2"/>
+  
+  <!-- Background gradient -->
+  <rect width="800" height="600" fill="url(#shop2_gradient)"/>
+  
+  <!-- Modern boutique elements -->
+  <rect x="100" y="80" width="250" height="420" rx="15" fill="#FFFFFF" opacity="0.4"/>
+  <rect x="450" y="80" width="250" height="420" rx="15" fill="#FFFFFF" opacity="0.4"/>
+  
+  <!-- Minimal rack design -->
+  <line x1="130" y1="150" x2="320" y2="150" stroke="#1A1A1A" stroke-width="4"/>
+  <line x1="480" y1="150" x2="670" y2="150" stroke="#1A1A1A" stroke-width="4"/>
+  
+  <!-- Hanging garments - minimalist -->
+  <rect x="150" y="155" width="50" height="180" rx="5" fill="#1A1A1A" opacity="0.7"/>
+  <rect x="210" y="155" width="50" height="200" rx="5" fill="#DCAE96" opacity="0.8"/>
+  <rect x="270" y="155" width="50" height="170" rx="5" fill="#F5F0E8" opacity="0.9"/>
+  
+  <rect x="500" y="155" width="50" height="190" rx="5" fill="#DE98AB" opacity="0.7"/>
+  <rect x="560" y="155" width="50" height="175" rx="5" fill="#FFFDD0" opacity="0.8"/>
+  <rect x="620" y="155" width="50" height="195" rx="5" fill="#50C878" opacity="0.6"/>
+  
+  <!-- Display table -->
+  <ellipse cx="400" cy="480" rx="150" ry="40" fill="#1A1A1A" opacity="0.1"/>
+  <rect x="300" y="400" width="200" height="80" rx="10" fill="#FFFFFF" opacity="0.6"/>
+  
+  <!-- Decorative plant -->
+  <ellipse cx="700" cy="500" rx="30" ry="15" fill="#50C878" opacity="0.3"/>
+  <rect x="690" y="400" width="20" height="100" fill="#795940" opacity="0.5"/>
+  <circle cx="700" cy="380" r="40" fill="#50C878" opacity="0.4"/>
+  
+  <!-- Soft lighting effect -->
+  <circle cx="225" cy="50" r="100" fill="#FFF1F2" opacity="0.5"/>
+  <circle cx="575" cy="50" r="100" fill="#FFF1F2" opacity="0.5"/>
+  
+  <!-- Floor -->
+  <rect x="0" y="530" width="800" height="70" fill="#F5F0E8"/>
+  
+  <defs>
+    <linearGradient id="shop2_gradient" x1="0" y1="0" x2="800" y2="600">
+      <stop offset="0%" stop-color="#FFF1F2"/>
+      <stop offset="50%" stop-color="#FCF7EB"/>
+      <stop offset="100%" stop-color="#F5F0E8"/>
+    </linearGradient>
+  </defs>
+</svg>
+

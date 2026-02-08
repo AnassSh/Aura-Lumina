@@ -1,0 +1,27 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#FCF7EB"/>
+  
+  <!-- Consultation area -->
+  <rect x="30" y="100" width="340" height="220" rx="20" fill="#FFFFFF" opacity="0.5"/>
+  
+  <!-- Sofa -->
+  <rect x="60" y="200" width="280" height="80" rx="15" fill="#DCAE96" opacity="0.7"/>
+  <rect x="50" y="180" width="60" height="120" rx="10" fill="#DCAE96" opacity="0.8"/>
+  <rect x="290" y="180" width="60" height="120" rx="10" fill="#DCAE96" opacity="0.8"/>
+  
+  <!-- Cushions -->
+  <circle cx="120" cy="230" r="25" fill="#D4A84B" opacity="0.6"/>
+  <circle cx="280" cy="230" r="25" fill="#915F6D" opacity="0.6"/>
+  
+  <!-- Coffee table -->
+  <ellipse cx="200" cy="330" rx="80" ry="25" fill="#795940" opacity="0.6"/>
+  
+  <!-- Mood board on wall -->
+  <rect x="150" y="50" width="100" height="80" rx="5" fill="#F5F0E8"/>
+  <rect x="155" y="55" width="40" height="30" fill="#DE98AB" opacity="0.5"/>
+  <rect x="200" y="55" width="45" height="30" fill="#D4A84B" opacity="0.5"/>
+  <rect x="155" y="90" width="90" height="35" fill="#1A1A1A" opacity="0.3"/>
+  
+  <text x="200" y="380" text-anchor="middle" font-family="serif" font-size="14" fill="#666">Styling Consultation</text>
+</svg>
+

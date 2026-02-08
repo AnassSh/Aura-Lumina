@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="look4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fecdd3"/>
+      <stop offset="50%" style="stop-color:#f5f0e8"/>
+      <stop offset="100%" style="stop-color:#d4a84b" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#look4)"/>
+  <circle cx="200" cy="250" r="80" fill="#fff" opacity="0.5"/>
+  <circle cx="400" cy="250" r="100" fill="#fff" opacity="0.5"/>
+  <circle cx="600" cy="250" r="80" fill="#fff" opacity="0.5"/>
+  <text x="400" y="420" text-anchor="middle" font-family="serif" font-size="24" fill="#666">Spring Awakening</text>
+</svg>
+

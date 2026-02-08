@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="look3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a84b"/>
+      <stop offset="100%" style="stop-color:#c49436"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="#1a1a1a"/>
+  <circle cx="400" cy="200" r="100" fill="url(#look3)" opacity="0.6"/>
+  <ellipse cx="400" cy="320" rx="120" ry="150" fill="#383838"/>
+  <text x="400" y="480" text-anchor="middle" font-family="serif" font-size="24" fill="#d4a84b">Special Occasions</text>
+</svg>
+

@@ -1,0 +1,29 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F5F0E8"/>
+  
+  <!-- Tea service setup -->
+  <ellipse cx="200" cy="300" rx="150" ry="50" fill="#DED0C0"/>
+  
+  <!-- Table -->
+  <ellipse cx="200" cy="250" rx="120" ry="40" fill="#795940" opacity="0.8"/>
+  
+  <!-- Tea pot -->
+  <ellipse cx="200" cy="200" rx="40" ry="25" fill="#D4A84B"/>
+  <rect x="170" y="160" width="60" height="40" rx="10" fill="#D4A84B"/>
+  <ellipse cx="200" cy="160" rx="30" ry="10" fill="#C49436"/>
+  
+  <!-- Tea glasses -->
+  <rect x="120" y="210" width="25" height="35" rx="3" fill="#D4A84B" opacity="0.6"/>
+  <rect x="255" y="210" width="25" height="35" rx="3" fill="#D4A84B" opacity="0.6"/>
+  
+  <!-- Moroccan pastries -->
+  <circle cx="150" cy="230" r="15" fill="#C49436" opacity="0.7"/>
+  <circle cx="250" cy="230" r="15" fill="#C49436" opacity="0.7"/>
+  
+  <!-- Decorative pattern -->
+  <circle cx="200" cy="100" r="60" fill="#D4A84B" opacity="0.1"/>
+  <path d="M200 50 L210 90 L250 100 L210 110 L200 150 L190 110 L150 100 L190 90 Z" fill="#D4A84B" opacity="0.3"/>
+  
+  <text x="200" y="380" text-anchor="middle" font-family="serif" font-size="14" fill="#666">Moroccan Hospitality</text>
+</svg>
+

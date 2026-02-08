@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+  <defs>
+    <linearGradient id="look1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#434343"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="500" fill="url(#look1)"/>
+  <circle cx="300" cy="250" r="150" fill="#d4a84b" opacity="0.2"/>
+  <circle cx="900" cy="250" r="150" fill="#fecdd3" opacity="0.2"/>
+  <text x="600" y="260" text-anchor="middle" font-family="serif" font-size="48" fill="#fff">Winter Elegance 2024</text>
+  <text x="600" y="320" text-anchor="middle" font-family="sans-serif" font-size="20" fill="#deccb3">Luxurious Collection</text>
+</svg>
+
