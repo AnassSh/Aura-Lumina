@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import ContactForm from "@/components/ContactForm";
 
 export async function generateMetadata({
   params,
@@ -19,31 +20,22 @@ const contactInfoConfig = [
   {
     icon: "email",
     value: "hello@auralumina.com",
-    href: "mailto:hello@auralumina.com",
+    href: "mailto:anasannuler@gmail.com",
     titleKey: "emailUs" as const,
   },
   {
     icon: "location",
-    value: "Casablanca, Morocco",
+    value: "Rabat, Morocco",
     href: null as string | null,
     titleKey: "location" as const,
   },
   {
     icon: "instagram",
-    value: "@auralumina",
-    href: "https://instagram.com/auralumina",
+    value: "@aulumina",
+    href: "https://www.instagram.com/aulumina/",
     titleKey: "instagram" as const,
   },
 ];
-
-const inquiryTypeKeys = [
-  "inquiryGeneral",
-  "inquiryPartnership",
-  "inquiryShop",
-  "inquiryPress",
-  "inquiryFeedback",
-  "inquiryOther",
-] as const;
 
 const quickLinks = [
   { href: "/faq", key: "faqLink" as const },
@@ -175,129 +167,7 @@ export default async function ContactPage() {
           </div>
 
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10">
-              <h2 className="text-2xl font-serif font-semibold text-softBlack-900 mb-6">
-                {t("formTitle")}
-              </h2>
-
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="block text-sm font-medium text-softBlack-700 mb-2"
-                    >
-                      {t("firstName")}
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      autoComplete="given-name"
-                      required
-                      className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors"
-                      placeholder={t("firstNamePlaceholder")}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="block text-sm font-medium text-softBlack-700 mb-2"
-                    >
-                      {t("lastName")}
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      autoComplete="family-name"
-                      required
-                      className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors"
-                      placeholder={t("lastNamePlaceholder")}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-softBlack-700 mb-2"
-                  >
-                    {t("email")}
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    autoComplete="email"
-                    required
-                    className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors"
-                    placeholder={t("emailPlaceholder")}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="inquiryType"
-                    className="block text-sm font-medium text-softBlack-700 mb-2"
-                  >
-                    {t("inquiryType")}
-                  </label>
-                  <select
-                    id="inquiryType"
-                    name="inquiryType"
-                    required
-                    className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors text-softBlack-700"
-                  >
-                    <option value="">{t("selectOption")}</option>
-                    {inquiryTypeKeys.map((key) => (
-                      <option key={key} value={key}>
-                        {t(key)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-softBlack-700 mb-2"
-                  >
-                    {t("message")}
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    required
-                    className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors resize-none"
-                    placeholder={t("messagePlaceholder")}
-                  />
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="newsletter"
-                    name="newsletter"
-                    className="mt-1 w-4 h-4 text-gold-600 border-beige-300 rounded focus:ring-gold-500"
-                  />
-                  <label
-                    htmlFor="newsletter"
-                    className="text-sm text-softBlack-600"
-                  >
-                    {t("newsletterLabel")}
-                  </label>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-4 bg-softBlack-900 text-white font-medium rounded-full hover:bg-softBlack-800 transition-colors"
-                >
-                  {t("send")}
-                </button>
-              </form>
-            </div>
+            <ContactForm />
           </div>
         </div>
       </section>

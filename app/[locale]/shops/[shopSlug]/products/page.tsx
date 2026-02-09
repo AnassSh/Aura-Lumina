@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
 
 // Types
 interface Product {
@@ -134,11 +135,12 @@ export async function generateMetadata({
   };
 }
 
-export default function ShopProductsPage({
+export default async function ShopProductsPage({
   params,
 }: {
   params: { locale: string; shopSlug: string };
 }) {
+  const t = await getTranslations("product");
   const data = shopData[params.shopSlug];
 
   if (!data) {
@@ -225,12 +227,11 @@ export default function ShopProductsPage({
       <section className="container-custom py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
-            <Link
-              key={product.slug}
-              href={`/shops/${shop.slug}/products/${product.slug}`}
-              className="group block"
-            >
-              <article className="card h-full">
+            <article key={product.slug} className="card h-full flex flex-col group">
+              <Link
+                href={`/shops/${shop.slug}/products/${product.slug}`}
+                className="block flex-1"
+              >
                 <div className="relative aspect-[3/4] overflow-hidden bg-beige-100">
                   <Image
                     src={product.images[0]}
@@ -243,22 +244,28 @@ export default function ShopProductsPage({
                     {product.category}
                   </span>
                 </div>
-                <div className="p-5">
+                <div className="p-5 pb-2">
                   <h2 className="text-lg font-medium text-softBlack-800 mb-2 group-hover:text-gold-600 transition-colors">
                     {product.name}
                   </h2>
                   <p className="text-softBlack-500 text-sm mb-3 line-clamp-2">
                     {product.description}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-gold-600 font-semibold">{product.price}</p>
-                    <span className="text-sm text-softBlack-400 group-hover:text-gold-600 transition-colors">
-                      View Details →
-                    </span>
-                  </div>
+                  <p className="text-gold-600 font-semibold">{product.price}</p>
                 </div>
-              </article>
-            </Link>
+              </Link>
+              <div className="px-5 pb-5 pt-2">
+                <Link
+                  href={`/contact?product=${encodeURIComponent(product.name)}&price=${encodeURIComponent(product.price)}&image=${encodeURIComponent(product.images[0])}&shopSlug=${encodeURIComponent(shop.slug)}&productSlug=${encodeURIComponent(product.slug)}`}
+                  className="w-full py-2.5 bg-gold-600 text-white text-sm font-medium rounded-full hover:bg-gold-700 transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  {t("buyNow")}
+                </Link>
+              </div>
+            </article>
           ))}
         </div>
       </section>

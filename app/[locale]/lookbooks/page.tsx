@@ -35,9 +35,12 @@ const colorToHex = COLOR_HEX_MAP;
 
 export default async function LookbooksPage() {
   const t = await getTranslations("lookbooks");
+  const tProduct = await getTranslations("product");
 
   // Build translations object for client components
   const translations: Record<string, string> = {
+    // Buy Now
+    buyNow: tProduct("buyNow"),
     // Categories
     catAll: t("catAll"),
     catNewArrivals: t("catNewArrivals"),

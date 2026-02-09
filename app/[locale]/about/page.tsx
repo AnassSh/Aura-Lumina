@@ -62,7 +62,13 @@ export default async function AboutPage() {
           </div>
           <div className="relative">
             <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
-              <Image src="/images/lookbook-1.svg" alt="Aura Lumina - Modest Fashion" fill className="object-cover" />
+              <Image
+                src="/images/lookbook-1.svg"
+                alt="Aura Lumina - Modest Fashion"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
             </div>
             <div className="absolute -bottom-6 -left-6 w-48 h-48 bg-gold-100 rounded-3xl -z-10" />
           </div>

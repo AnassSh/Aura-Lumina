@@ -82,7 +82,14 @@ export default async function HomePage() {
                 <div className="absolute -top-6 -left-6 w-24 h-24 bg-gold-200 rounded-full opacity-60 blur-2xl" />
                 <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-rose-200 rounded-full opacity-60 blur-2xl" />
                 <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                  <Image src="https://images.unsplash.com/photo-1602371021206-89305975f322?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt={t("heroAlt")} fill className="object-cover" priority />
+                  <Image
+                    src="https://images.unsplash.com/photo-1602371021206-89305975f322?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt={t("heroAlt")}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 512px"
+                    className="object-cover"
+                    priority
+                  />
                 </div>
                 <div className="absolute -right-4 bottom-12 bg-white p-4 rounded-2xl shadow-xl">
                   <div className="flex items-center gap-3">
@@ -137,7 +144,14 @@ export default async function HomePage() {
               <Link key={product.id} href={`/shops/${product.shopSlug}/products/${product.productSlug}`} className="group block">
                 <article className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                   <div className="relative aspect-[3/4] overflow-hidden">
-                    <Image src={product.image} alt={product.name} fill loading="lazy" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                     <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-softBlack-800 flex items-center gap-1.5">
                       <svg className="w-3 h-3 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -172,6 +186,7 @@ export default async function HomePage() {
                     src={product.image}
                     alt={product.name}
                     fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     loading="lazy"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -197,7 +212,14 @@ export default async function HomePage() {
               <article key={look.id} className="group relative bg-softBlack-800 rounded-3xl overflow-hidden">
                 <div className="grid md:grid-cols-2">
                   <div className="relative aspect-square md:aspect-auto">
-                    <Image src={look.image} alt={t(look.titleKey)} fill loading="lazy" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image
+                    src={look.image}
+                    alt={t(look.titleKey)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                   </div>
                   <div className="p-8 flex flex-col justify-center">
                     <h3 className="text-2xl font-serif font-semibold mb-4">{t(look.titleKey)}</h3>
@@ -231,7 +253,14 @@ export default async function HomePage() {
               <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
                 <article className="card h-full">
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image src={post.image} alt={t(post.titleKey)} fill loading="lazy" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image
+                    src={post.image}
+                    alt={t(post.titleKey)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                   </div>
                   <div className="p-6">
                     <time className="text-sm text-gold-600 font-medium">{post.date}</time>

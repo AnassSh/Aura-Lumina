@@ -32,50 +32,50 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
+          ? "bg-white shadow-md border-b border-beige-100"
+          : "bg-white/90 backdrop-blur-sm border-b border-beige-100/50"
       }`}
     >
       <nav className="container-custom">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="relative">
-              <span className="text-2xl md:text-3xl font-serif font-bold text-softBlack-900">
-                Aura
-              </span>
-              <span className="text-2xl md:text-3xl font-serif font-light text-gold-500">
-                Lumina
-              </span>
-            </div>
+          <Link
+            href="/"
+            className="flex items-center gap-2 shrink-0 text-softBlack-900 hover:opacity-90 transition-opacity"
+          >
+            <span className="text-xl md:text-2xl font-serif font-bold">
+              Aura
+            </span>
+            <span className="text-xl md:text-2xl font-serif font-light text-gold-600">
+              Lumina
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.nameKey}
                 href={link.href}
-                className="text-softBlack-700 hover:text-gold-600 font-medium transition-colors duration-200 relative group"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-softBlack-800 hover:text-gold-600 hover:bg-gold-50/80 transition-colors duration-200"
               >
                 {t(link.nameKey)}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
           </div>
 
           {/* Language switcher + Search & Cart Icons */}
-          <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-1 rounded-full border border-beige-200 overflow-hidden">
+          <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-0.5 rounded-full bg-beige-100/80 p-0.5">
               {(["en", "ar", "fr"] as const).map((loc) => (
                 <Link
                   key={loc}
                   href={pathname}
                   locale={loc}
-                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`min-w-[2.25rem] py-1.5 text-center text-sm font-medium rounded-full transition-colors ${
                     locale === loc
-                      ? "bg-softBlack-900 text-beige-50"
-                      : "text-softBlack-600 hover:bg-beige-100"
+                      ? "bg-softBlack-900 text-white shadow-sm"
+                      : "text-softBlack-700 hover:bg-white/80"
                   }`}
                   aria-label={tLocale(loc)}
                 >
@@ -85,7 +85,7 @@ export default function Navbar() {
             </div>
             <button
               aria-label={t("searchAria")}
-              className="p-2 text-softBlack-700 hover:text-gold-600 transition-colors"
+              className="p-2.5 rounded-lg text-softBlack-700 hover:text-gold-600 hover:bg-beige-100/80 transition-colors"
             >
               <svg
                 className="w-5 h-5"
@@ -103,7 +103,7 @@ export default function Navbar() {
             </button>
             <button
               aria-label="Shopping bag"
-              className="p-2 text-softBlack-700 hover:text-gold-600 transition-colors relative"
+              className="p-2.5 rounded-lg text-softBlack-700 hover:text-gold-600 hover:bg-beige-100/80 transition-colors relative"
             >
               <svg
                 className="w-5 h-5"
@@ -118,7 +118,7 @@ export default function Navbar() {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center">
+              <span className="absolute top-1 right-1 w-4 h-4 bg-gold-500 text-white text-[10px] font-semibold rounded-full flex items-center justify-center">
                 0
               </span>
             </button>
@@ -127,7 +127,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-softBlack-700"
+            className="md:hidden p-2.5 rounded-lg text-softBlack-800 hover:bg-beige-100/80 transition-colors"
             aria-label={t("menuAria")}
           >
             <svg
@@ -157,33 +157,33 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden transition-all duration-300 overflow-hidden ${
+          className={`md:hidden transition-all duration-300 ease-out overflow-hidden ${
             isOpen ? "max-h-96 pb-6" : "max-h-0"
           }`}
         >
-          <div className="flex flex-col gap-4 pt-4 border-t border-beige-200">
+          <div className="flex flex-col gap-1 pt-4 border-t border-beige-200">
             {navLinks.map((link) => (
               <Link
                 key={link.nameKey}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-softBlack-700 hover:text-gold-600 font-medium transition-colors duration-200 py-2"
+                className="py-3 px-3 rounded-lg text-softBlack-800 font-medium hover:text-gold-600 hover:bg-gold-50/60 transition-colors"
               >
                 {t(link.nameKey)}
               </Link>
             ))}
             {/* Mobile Language Switcher */}
-            <div className="flex items-center gap-2 pt-4 border-t border-beige-200">
+            <div className="flex items-center gap-2 pt-4 mt-2 border-t border-beige-200">
               {(["en", "ar", "fr"] as const).map((loc) => (
                 <Link
                   key={loc}
                   href={pathname}
                   locale={loc}
                   onClick={() => setIsOpen(false)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                  className={`px-4 py-2.5 text-sm font-medium rounded-full transition-colors ${
                     locale === loc
-                      ? "bg-softBlack-900 text-beige-50"
-                      : "bg-beige-100 text-softBlack-600"
+                      ? "bg-softBlack-900 text-white"
+                      : "bg-beige-100 text-softBlack-700 hover:bg-beige-200"
                   }`}
                 >
                   {loc === "ar" ? "العربية" : loc === "fr" ? "Français" : "English"}

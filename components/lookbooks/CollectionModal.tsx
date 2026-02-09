@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useMemo } from "react";
+import { Link } from "@/i18n/navigation";
 import type { Lookbook } from "@/lib/data/types";
 
 interface CollectionModalProps {
@@ -135,54 +136,70 @@ export default function CollectionModal({
           {/* Products Grid */}
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {placeholderProducts.map((product, index) => (
-                <article key={product.id} className="group">
-                  <div className="bg-beige-50 rounded-2xl overflow-hidden">
-                    <div className="relative aspect-[3/4] overflow-hidden">
-                      <Image
-                        src={product.image}
-                        alt={`${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`}
-                        fill
-                        loading="lazy"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      {product.badge && (
-                        <span
-                          className={`absolute top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full ${
-                            product.badge === "new"
-                              ? "bg-gold-500 text-softBlack-900"
-                              : "bg-softBlack-900 text-white"
-                          }`}
-                        >
-                          {translations[product.badge] || product.badge}
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-sm font-medium text-softBlack-800 mb-1 group-hover:text-gold-600 transition-colors">
-                        {collectionTitle} - {translations["item"] || "Item"} {index + 1}
-                      </h3>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-gold-600">
-                          {product.price}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          {product.colors.map((color) => (
-                            <span
-                              key={color}
-                              title={color}
-                              className="w-4 h-4 rounded-full border border-beige-200"
-                              style={{
-                                backgroundColor: colorToHex[color] ?? "#ddd",
-                              }}
-                            />
-                          ))}
+              {placeholderProducts.map((product, index) => {
+                const itemName = `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
+                const buyNowHref = `/contact?product=${encodeURIComponent(itemName)}&price=${encodeURIComponent(product.price)}&image=${encodeURIComponent(product.image)}`;
+
+                return (
+                  <article key={product.id} className="group">
+                    <div className="bg-beige-50 rounded-2xl overflow-hidden flex flex-col">
+                      <div className="relative aspect-[3/4] overflow-hidden">
+                        <Image
+                          src={product.image}
+                          alt={itemName}
+                          fill
+                          loading="lazy"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        {product.badge && (
+                          <span
+                            className={`absolute top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full ${
+                              product.badge === "new"
+                                ? "bg-gold-500 text-softBlack-900"
+                                : "bg-softBlack-900 text-white"
+                            }`}
+                          >
+                            {translations[product.badge] || product.badge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-4 pb-2">
+                        <h3 className="text-sm font-medium text-softBlack-800 mb-1 group-hover:text-gold-600 transition-colors">
+                          {itemName}
+                        </h3>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-gold-600">
+                            {product.price}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            {product.colors.map((color) => (
+                              <span
+                                key={color}
+                                title={color}
+                                className="w-4 h-4 rounded-full border border-beige-200"
+                                style={{
+                                  backgroundColor: colorToHex[color] ?? "#ddd",
+                                }}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
+                      <div className="px-4 pb-4 pt-1">
+                        <Link
+                          href={buyNowHref}
+                          className="w-full py-2 bg-gold-600 text-white text-xs font-medium rounded-full hover:bg-gold-700 transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                          </svg>
+                          {translations["buyNow"] || "Buy Now"}
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
 
             {/* Coming Soon Notice */}
