@@ -39,8 +39,9 @@ export default async function LookbooksPage() {
 
   // Build translations object for client components
   const translations: Record<string, string> = {
-    // Buy Now
+    // Buy Now & Size
     buyNow: tProduct("buyNow"),
+    selectSize: tProduct("selectSize"),
     // Categories
     catAll: t("catAll"),
     catNewArrivals: t("catNewArrivals"),
@@ -53,7 +54,6 @@ export default async function LookbooksPage() {
     bestseller: t("bestseller"),
     sale: t("sale"),
     // UI
-    quickView: t("quickView"),
     noProducts: t("noProducts"),
     pieces: t("pieces"),
     item: t("item"),
@@ -112,6 +112,7 @@ export default async function LookbooksPage() {
                     src={lookbook.image}
                     alt={t(lookbook.titleKey)}
                     fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     loading="lazy"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />

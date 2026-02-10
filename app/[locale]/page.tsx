@@ -31,7 +31,7 @@ export async function generateMetadata({
 // Get data from centralized data layer
 const featuredAbayas = getFeaturedAbayas();
 const beautyTips = getBeautyTips();
-const editorsPicks = getEditorsPicks();
+const editorsPicks = getEditorsPicks().slice(0, 4);
 const latestPosts = getLatestPosts();
 const shopProducts = getShopProductListings();
 const shopTheLook = getShopTheLook();
@@ -191,6 +191,12 @@ export default async function HomePage() {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-softBlack-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Link
+                    href={`/contact?product=${encodeURIComponent(product.name)}&price=${encodeURIComponent(product.price)}&image=${encodeURIComponent(product.image)}`}
+                    className="absolute bottom-4 left-4 right-4 py-2 bg-white text-softBlack-900 font-medium rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-softBlack-900 hover:text-white text-center block"
+                  >
+                    {t("buyNow")}
+                  </Link>
                 </div>
                 <p className="text-sm text-rose-500 font-medium mb-1">{product.brand}</p>
                 <h3 className="text-lg font-medium text-softBlack-900 mb-1 group-hover:text-rose-500 transition-colors">{product.name}</h3>

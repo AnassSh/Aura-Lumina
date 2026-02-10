@@ -44,6 +44,38 @@ export const beautyProducts: BeautyProduct[] = [
     image: "/images/product-4.svg",
     featured: true,
   },
+  {
+    id: 5,
+    name: "Lavender Hydrating Toner",
+    brand: "Calm Skin Co",
+    price: "$22",
+    image: "/images/product-1.svg",
+    featured: true,
+  },
+  {
+    id: 6,
+    name: "Pomegranate Brightening Serum",
+    brand: "Radiance Lab",
+    price: "$36",
+    image: "/images/product-2.svg",
+    featured: true,
+  },
+  {
+    id: 7,
+    name: "Shea Butter Hand Cream",
+    brand: "Hand Care",
+    price: "$18",
+    image: "/images/product-3.svg",
+    featured: true,
+  },
+  {
+    id: 8,
+    name: "Orange Blossom Face Mist",
+    brand: "Scent & Glow",
+    price: "$20",
+    image: "/images/product-4.svg",
+    featured: true,
+  },
 ];
 
 // -----------------------------------------------------------------------------
@@ -75,7 +107,7 @@ export const beautyTips: BeautyTip[] = [
     categoryKey: "products",
     slug: "top-halal-beauty-brands",
   },
-];
+]
 
 // -----------------------------------------------------------------------------
 // QUICK TIPS (for Beauty page)

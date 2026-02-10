@@ -7,13 +7,9 @@ import { useState, useCallback, useEffect, Suspense } from "react";
 import Image from "next/image";
 
 const inquiryTypeKeys = [
-  "inquiryGeneral",
-  "inquiryPartnership",
-  "inquiryShop",
-  "inquiryPress",
-  "inquiryFeedback",
   "inquiryClientForm",
-  "inquiryOther",
+  "inquiryPartnership",
+  "inquiryGeneral",
 ] as const;
 
 function formatPhoneNumber(value: string): string {
@@ -125,6 +121,7 @@ function ContactFormInner() {
                   src={productImage}
                   alt={productName || ""}
                   fill
+                  sizes="80px"
                   className="object-cover"
                 />
               </div>

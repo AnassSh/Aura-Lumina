@@ -110,6 +110,7 @@ export default async function ShopProfilePage({
             src={shop.image}
             alt={`${shop.name} boutique in ${shop.location.city}`}
             fill
+            sizes="100vw"
             priority
             className="object-cover"
           />

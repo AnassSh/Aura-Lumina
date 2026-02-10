@@ -168,6 +168,7 @@ export default async function ShopProductsPage({
           src={shop.image}
           alt={shop.name}
           fill
+          sizes="100vw"
           priority
           className="object-cover"
         />
@@ -237,6 +238,7 @@ export default async function ShopProductsPage({
                     src={product.images[0]}
                     alt={product.name}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     loading="lazy"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />

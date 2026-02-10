@@ -408,6 +408,7 @@ export default function ProductPage({
                 src={product.images[0]}
                 alt={product.name}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 priority
                 className="object-cover"
               />
@@ -424,6 +425,7 @@ export default function ProductPage({
                     src={image}
                     alt={`${product.name} detail ${index + 1}`}
                     fill
+                    sizes="(max-width: 768px) 33vw, 200px"
                     loading="lazy"
                     className="object-cover"
                   />
@@ -618,6 +620,7 @@ export default function ProductPage({
                       src={otherProduct.images[0]}
                       alt={otherProduct.name}
                       fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
                       loading="lazy"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />

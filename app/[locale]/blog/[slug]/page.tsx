@@ -104,6 +104,7 @@ export default async function BlogPostPage({
                   src={post.author.avatar}
                   alt={post.author.name}
                   fill
+                  sizes="48px"
                   loading="lazy"
                   className="object-cover"
                 />
@@ -126,6 +127,7 @@ export default async function BlogPostPage({
             src={post.image}
             alt={post.title}
             fill
+            sizes="(max-width: 768px) 100vw, 1024px"
             className="object-cover"
             priority
           />
@@ -187,6 +189,7 @@ export default async function BlogPostPage({
                   src={post.author.avatar}
                   alt={post.author.name}
                   fill
+                  sizes="80px"
                   loading="lazy"
                   className="object-cover"
                 />
@@ -225,6 +228,7 @@ export default async function BlogPostPage({
                         src={relatedPost.image}
                         alt={relatedPost.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
                         loading="lazy"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />

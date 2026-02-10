@@ -19,6 +19,7 @@ export interface Abaya {
   originalPrice?: string;
   image: string;
   colors?: string[];
+  sizes?: string[];
   badge?: BadgeType;
   featured?: boolean;
   lookbookFeatured?: boolean;

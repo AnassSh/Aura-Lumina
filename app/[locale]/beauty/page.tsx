@@ -61,25 +61,7 @@ export default async function BeautyPage() {
         </div>
       </section>
 
-      {/* Quick Beauty Tips */}
-      <section className="container-custom py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {quickTipKeys.map((tip, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-beige-100"
-            >
-              <span className="text-4xl mb-4 block">{tip.icon}</span>
-              <h3 className="text-lg font-semibold text-softBlack-900 mb-2">
-                {t(tip.titleKey)}
-              </h3>
-              <p className="text-softBlack-500 text-sm">{t(tip.textKey)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Editor's Picks - Main Products Section */}
+      {/* Editor's Picks - First */}
       <section id="editors-picks" className="py-16 bg-white">
         <div className="container-custom">
           <SectionHeader
@@ -95,16 +77,17 @@ export default async function BeautyPage() {
                     src={product.image}
                     alt={product.name}
                     fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     loading="lazy"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-softBlack-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <button
-                    type="button"
-                    className="absolute bottom-4 left-4 right-4 py-2 bg-white text-softBlack-900 font-medium rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-softBlack-900 hover:text-white"
+                  <Link
+                    href={`/contact?product=${encodeURIComponent(product.name)}&price=${encodeURIComponent(product.price)}&image=${encodeURIComponent(product.image)}`}
+                    className="absolute bottom-4 left-4 right-4 py-2 bg-white text-softBlack-900 font-medium rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-softBlack-900 hover:text-white text-center block"
                   >
-                    {t("addToCart")}
-                  </button>
+                    {t("buyNow")}
+                  </Link>
                 </div>
                 <p className="text-sm text-rose-500 font-medium mb-1">
                   {product.brand}
@@ -116,62 +99,24 @@ export default async function BeautyPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Product Categories */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link href="/blog?cat=skincare" className="group">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-rose-100 to-rose-200" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-4xl mb-2 block">🧴</span>
-                    <h3 className="text-lg font-semibold text-softBlack-900 group-hover:text-rose-600 transition-colors">
-                      {t("catSkincare")}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            <Link href="/blog?cat=makeup" className="group">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-gold-100 to-gold-200" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-4xl mb-2 block">💄</span>
-                    <h3 className="text-lg font-semibold text-softBlack-900 group-hover:text-gold-600 transition-colors">
-                      {t("catMakeup")}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            <Link href="/blog?cat=haircare" className="group">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-beige-100 to-beige-200" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-4xl mb-2 block">💇‍♀️</span>
-                    <h3 className="text-lg font-semibold text-softBlack-900 group-hover:text-beige-700 transition-colors">
-                      {t("catHairCare")}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            <Link href="/blog?cat=wellness" className="group">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-emerald-200" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-4xl mb-2 block">🧘‍♀️</span>
-                    <h3 className="text-lg font-semibold text-softBlack-900 group-hover:text-emerald-600 transition-colors">
-                      {t("catWellness")}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
+      {/* Quick Beauty Tips - Second */}
+      <section className="container-custom py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {quickTipKeys.map((tip, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-beige-100"
+            >
+              <span className="text-4xl mb-4 block">{tip.icon}</span>
+              <h3 className="text-lg font-semibold text-softBlack-900 mb-2">
+                {t(tip.titleKey)}
+              </h3>
+              <p className="text-softBlack-500 text-sm">{t(tip.textKey)}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -218,6 +163,7 @@ export default async function BeautyPage() {
               src="/images/video-banner.svg"
               alt={t("watchTutorial")}
               fill
+              sizes="(max-width: 768px) 100vw, 1024px"
               loading="lazy"
               className="object-cover opacity-60"
             />

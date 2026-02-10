@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import type { Lookbook } from "@/lib/data/types";
 
@@ -30,6 +30,16 @@ const placeholderColors = [
   ["Emerald", "Ruby"],
   ["Black"],
   ["Navy", "Burgundy"],
+];
+
+// Placeholder sizes (same as shop products)
+const placeholderSizes = [
+  ["S", "M", "L", "XL", "XXL"],
+  ["S", "M", "L", "XL"],
+  ["S", "M", "L", "XL", "XXL", "3XL"],
+  ["XS", "S", "M", "L", "XL"],
+  ["One Size"],
+  ["S", "M", "L", "XL"],
 ];
 
 // Placeholder prices
@@ -60,22 +70,29 @@ export default function CollectionModal({
   // Generate placeholder products
   const placeholderProducts = useMemo(() => {
     if (!selectedLookbook) return [];
-    
+
     return Array.from({ length: selectedLookbook.itemCount }, (_, i) => ({
       id: `placeholder-${i}`,
       image: placeholderImages[i % placeholderImages.length],
       price: placeholderPrices[i % placeholderPrices.length],
       colors: placeholderColors[i % placeholderColors.length],
+      sizes: placeholderSizes[i % placeholderSizes.length],
       badge: i < 2 ? "new" : i === 3 ? "bestseller" : null,
     }));
   }, [selectedLookbook]);
 
-  // Close modal function
-  const closeModal = () => {
+  const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
+
+  const setSize = (productId: string, size: string) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
+  };
+
+  // Close modal function (stable reference for useEffect)
+  const closeModal = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("collection");
     router.push(`?${params.toString()}`, { scroll: false });
-  };
+  }, [searchParams, router]);
 
   // Close on escape key
   useEffect(() => {
@@ -86,7 +103,7 @@ export default function CollectionModal({
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [collectionSlug]);
+  }, [collectionSlug, closeModal]);
 
   // Don't render if no collection selected
   if (!selectedLookbook) return null;
@@ -138,7 +155,15 @@ export default function CollectionModal({
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {placeholderProducts.map((product, index) => {
                 const itemName = `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
-                const buyNowHref = `/contact?product=${encodeURIComponent(itemName)}&price=${encodeURIComponent(product.price)}&image=${encodeURIComponent(product.image)}`;
+                const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
+                const params = new URLSearchParams({
+                  product: itemName,
+                  price: product.price,
+                  image: product.image,
+                });
+                if (selectedSize) params.set("size", selectedSize);
+                if (product.sizes?.length) params.set("sizes", product.sizes.join(","));
+                const buyNowHref = `/contact?${params.toString()}`;
 
                 return (
                   <article key={product.id} className="group">
@@ -148,6 +173,7 @@ export default function CollectionModal({
                           src={product.image}
                           alt={itemName}
                           fill
+                          sizes="(max-width: 768px) 50vw, 33vw"
                           loading="lazy"
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
@@ -167,6 +193,29 @@ export default function CollectionModal({
                         <h3 className="text-sm font-medium text-softBlack-800 mb-1 group-hover:text-gold-600 transition-colors">
                           {itemName}
                         </h3>
+                        {product.sizes && product.sizes.length > 0 && (
+                          <div className="mb-2">
+                            <p className="text-[10px] font-medium text-softBlack-600 mb-1">
+                              {translations["selectSize"] || "Select Size"}
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {product.sizes.map((size) => (
+                                <button
+                                  key={size}
+                                  type="button"
+                                  onClick={() => setSize(product.id, size)}
+                                  className={`px-2 py-1 text-[10px] font-medium rounded-full border transition-colors ${
+                                    selectedSize === size
+                                      ? "bg-softBlack-900 text-white border-softBlack-900"
+                                      : "border-beige-200 text-softBlack-700 hover:border-gold-500"
+                                  }`}
+                                >
+                                  {size}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-semibold text-gold-600">
                             {product.price}

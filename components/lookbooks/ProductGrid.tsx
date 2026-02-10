@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import type { Abaya } from "@/lib/data/types";
 
@@ -18,16 +18,18 @@ export default function ProductGrid({
   colorToHex,
 }: ProductGridProps) {
   const searchParams = useSearchParams();
-  
+  const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
+
   const filteredProducts = useMemo(() => {
     const category = searchParams.get("category");
-    
-    // No category filter = show all
+
     if (!category) return products;
-    
-    // Filter by category only
     return products.filter((p) => p.filterCategory === category);
   }, [products, searchParams]);
+
+  const setSize = (productId: string, size: string) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
+  };
 
   if (filteredProducts.length === 0) {
     return (
@@ -43,7 +45,15 @@ export default function ProductGrid({
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {filteredProducts.map((product) => {
         const productTitle = translations[product.titleKey] || product.titleKey;
-        const buyNowHref = `/contact?product=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(product.price)}&image=${encodeURIComponent(product.image)}`;
+        const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
+        const params = new URLSearchParams({
+          product: productTitle,
+          price: product.price,
+          image: product.image,
+        });
+        if (selectedSize) params.set("size", selectedSize);
+        if (product.sizes?.length) params.set("sizes", product.sizes.join(","));
+        const buyNowHref = `/contact?${params.toString()}`;
 
         return (
           <article key={product.id} className="group">
@@ -53,6 +63,7 @@ export default function ProductGrid({
                   src={product.image}
                   alt={productTitle}
                   fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
                   loading="lazy"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -69,15 +80,6 @@ export default function ProductGrid({
                     {translations[product.badge] || product.badge}
                   </span>
                 )}
-
-                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button
-                    type="button"
-                    className="w-full py-3 bg-white text-softBlack-900 font-medium rounded-full hover:bg-softBlack-900 hover:text-white transition-colors shadow-lg"
-                  >
-                    {translations["quickView"] || "Quick View"}
-                  </button>
-                </div>
               </div>
               <div className="p-5 pb-2">
                 <h3 className="text-lg font-medium text-softBlack-800 mb-2 group-hover:text-gold-600 transition-colors">
@@ -93,6 +95,30 @@ export default function ProductGrid({
                     </span>
                   )}
                 </div>
+
+                {product.sizes && product.sizes.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-xs font-medium text-softBlack-600 mb-1.5">
+                      {translations["selectSize"] || "Select Size"}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {product.sizes.map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => setSize(product.id, size)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                            selectedSize === size
+                              ? "bg-softBlack-900 text-white border-softBlack-900"
+                              : "border-beige-200 text-softBlack-700 hover:border-gold-500"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-2">
                   {product.colors?.map((color) => (
