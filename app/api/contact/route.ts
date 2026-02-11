@@ -64,43 +64,46 @@ export interface GeneralPayload extends ContactBasePayload {
 export type ContactPayload = OrderPayload | PartnerPayload | GeneralPayload;
 
 // -----------------------------------------------------------------------------
-// Validation
+// Validation (use unknown so type predicates are valid)
 // -----------------------------------------------------------------------------
 
-function validateOrder(body: Record<string, unknown>): body is OrderPayload {
+function validateOrder(body: unknown): body is OrderPayload {
+  const b = body as Record<string, unknown>;
   return (
-    typeof body.firstName === "string" &&
-    body.firstName.trim().length > 0 &&
-    typeof body.lastName === "string" &&
-    body.lastName.trim().length > 0 &&
-    typeof body.email === "string" &&
-    body.email.trim().length > 0
+    typeof b?.firstName === "string" &&
+    b.firstName.trim().length > 0 &&
+    typeof b?.lastName === "string" &&
+    b.lastName.trim().length > 0 &&
+    typeof b?.email === "string" &&
+    b.email.trim().length > 0
   );
 }
 
-function validatePartner(body: Record<string, unknown>): body is PartnerPayload {
+function validatePartner(body: unknown): body is PartnerPayload {
+  const b = body as Record<string, unknown>;
   return (
-    typeof body.firstName === "string" &&
-    body.firstName.trim().length > 0 &&
-    typeof body.lastName === "string" &&
-    body.lastName.trim().length > 0 &&
-    typeof body.email === "string" &&
-    body.email.trim().length > 0 &&
-    typeof body.shopName === "string" &&
-    body.shopName.trim().length > 0 &&
-    typeof body.shopCity === "string" &&
-    body.shopCity.trim().length > 0
+    typeof b?.firstName === "string" &&
+    b.firstName.trim().length > 0 &&
+    typeof b?.lastName === "string" &&
+    b.lastName.trim().length > 0 &&
+    typeof b?.email === "string" &&
+    b.email.trim().length > 0 &&
+    typeof b?.shopName === "string" &&
+    b.shopName.trim().length > 0 &&
+    typeof b?.shopCity === "string" &&
+    b.shopCity.trim().length > 0
   );
 }
 
-function validateGeneral(body: Record<string, unknown>): body is GeneralPayload {
+function validateGeneral(body: unknown): body is GeneralPayload {
+  const b = body as Record<string, unknown>;
   return (
-    typeof body.firstName === "string" &&
-    body.firstName.trim().length > 0 &&
-    typeof body.lastName === "string" &&
-    body.lastName.trim().length > 0 &&
-    typeof body.email === "string" &&
-    body.email.trim().length > 0
+    typeof b?.firstName === "string" &&
+    b.firstName.trim().length > 0 &&
+    typeof b?.lastName === "string" &&
+    b.lastName.trim().length > 0 &&
+    typeof b?.email === "string" &&
+    b.email.trim().length > 0
   );
 }
 
