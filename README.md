@@ -162,6 +162,22 @@ SEO metadata is configured in `app/layout.tsx`
 
 ## 📄 License
 
+## 📬 Contact API (CRM + n8n / Strapi)
+
+The contact page has two main flows: **product orders** (clients) and **shop partner** applications. Both submit to:
+
+- **`POST /api/contact`** – JSON body with `formType`: `"order"` | `"partner"` | `"general"`.
+
+Payloads are validated and returned as structured JSON (ready for n8n or Strapi). Optional env vars forward submissions to n8n webhooks for WhatsApp or other automation:
+
+- `N8N_WEBHOOK_URL_ORDER` – product order submissions
+- `N8N_WEBHOOK_URL_PARTNER` – partner applications  
+- `N8N_WEBHOOK_URL_GENERAL` – general inquiries
+
+See `.env.example`. You can then in n8n trigger WhatsApp messages, or POST the same payload to Strapi (or any CRM).
+
+---
+
 This project is for demonstration purposes.
 
 ---

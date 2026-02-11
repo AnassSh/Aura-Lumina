@@ -2,9 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useState, useCallback, useEffect, Suspense } from "react";
 import Image from "next/image";
+import type { ContactFormType } from "@/app/api/contact/route";
 
 const inquiryTypeKeys = [
   "inquiryClientForm",
@@ -21,6 +22,7 @@ function formatPhoneNumber(value: string): string {
 
 function ContactFormInner() {
   const t = useTranslations("contact");
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -34,17 +36,31 @@ function ContactFormInner() {
   const initialQuantity = parseInt(searchParams.get("quantity") || "1", 10);
   const shopSlug = searchParams.get("shopSlug") || "";
   const productSlug = searchParams.get("productSlug") || "";
+  const inquiryParam = searchParams.get("inquiry");
 
   const hasProduct = !!productName;
 
-  const [inquiryType, setInquiryType] = useState(
-    hasProduct ? "inquiryClientForm" : ""
-  );
+  const [inquiryType, setInquiryType] = useState(() => {
+    if (inquiryParam === "partner") return "inquiryPartnership";
+    if (hasProduct) return "inquiryClientForm";
+    return "";
+  });
   const [phone, setPhone] = useState("");
+  const [shopPhone, setShopPhone] = useState("");
+  const [shopWhatsapp, setShopWhatsapp] = useState("");
   const [selectedSize, setSelectedSize] = useState(initialSize);
   const [quantity, setQuantity] = useState(initialQuantity);
 
   const isClientForm = inquiryType === "inquiryClientForm";
+  const isPartnerForm = inquiryType === "inquiryPartnership";
+
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // When URL has ?inquiry=partner, keep inquiry type set to Partner (e.g. after client nav)
+  useEffect(() => {
+    if (inquiryParam === "partner") setInquiryType("inquiryPartnership");
+  }, [inquiryParam]);
 
   // Persist size/quantity in sessionStorage
   useEffect(() => {
@@ -81,6 +97,19 @@ function ContactFormInner() {
     []
   );
 
+  const handleShopPhoneChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setShopPhone(formatPhoneNumber(e.target.value));
+    },
+    []
+  );
+  const handleShopWhatsappChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setShopWhatsapp(formatPhoneNumber(e.target.value));
+    },
+    []
+  );
+
   const handleCancelOrder = useCallback(() => {
     // Clear persisted data
     if (productSlug) {
@@ -90,14 +119,104 @@ function ContactFormInner() {
     router.push("/contact");
   }, [productSlug, router]);
 
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setSubmitError(null);
+      setSubmitStatus("loading");
+
+      const form = e.currentTarget;
+      const fd = new FormData(form);
+
+      // Use the form's submitted inquiry type (not state) so formType is always correct
+      const submittedInquiryType = (fd.get("inquiryType") as string) || "";
+      const formType: ContactFormType =
+        submittedInquiryType === "inquiryClientForm"
+          ? "order"
+          : submittedInquiryType === "inquiryPartnership"
+            ? "partner"
+            : "general";
+
+      const payload: Record<string, unknown> = {
+        formType,
+        firstName: (fd.get("firstName") as string)?.trim() || "",
+        lastName: (fd.get("lastName") as string)?.trim() || "",
+        email: (fd.get("email") as string)?.trim() || "",
+        message: (fd.get("message") as string)?.trim() || undefined,
+        newsletter: fd.get("newsletter") === "on",
+        locale,
+        submittedAt: new Date().toISOString(),
+      };
+
+      if (formType === "order") {
+        payload.address = (fd.get("address") as string)?.trim();
+        payload.phone = fd.get("phone") ? `+212 ${(fd.get("phone") as string).replace(/\D/g, "").trim()}` : undefined;
+        payload.instagram = (fd.get("instagram") as string)?.trim() || undefined;
+        payload.facebook = (fd.get("facebook") as string)?.trim() || undefined;
+        payload.productName = (fd.get("productName") as string) || undefined;
+        payload.productPrice = (fd.get("productPrice") as string) || undefined;
+        payload.productImage = (fd.get("productImage") as string) || undefined;
+        payload.selectedSize = (fd.get("selectedSize") as string) || undefined;
+        payload.quantity = fd.get("quantity") ? parseInt(String(fd.get("quantity")), 10) : undefined;
+        payload.shopSlug = (fd.get("shopSlug") as string) || undefined;
+        payload.productSlug = (fd.get("productSlug") as string) || undefined;
+      }
+
+      if (formType === "partner") {
+        payload.shopName = (fd.get("shopName") as string)?.trim() || "";
+        payload.shopCity = (fd.get("shopCity") as string)?.trim() || "";
+        payload.shopNeighborhood = (fd.get("shopNeighborhood") as string)?.trim() || undefined;
+        payload.shopAddress = (fd.get("shopAddress") as string)?.trim() || undefined;
+        const shopPhoneRaw = (fd.get("shopPhone") as string)?.trim() || "";
+        const shopWhatsappRaw = (fd.get("shopWhatsapp") as string)?.trim() || "";
+        payload.shopPhone = shopPhoneRaw ? `+212 ${shopPhoneRaw.replace(/\D/g, "")}` : undefined;
+        payload.shopWhatsapp = shopWhatsappRaw ? `+212 ${shopWhatsappRaw.replace(/\D/g, "")}` : undefined;
+        payload.shopInstagram = (fd.get("shopInstagram") as string)?.trim() || undefined;
+        payload.shopWebsite = (fd.get("shopWebsite") as string)?.trim() || undefined;
+        payload.shopDescription = (fd.get("shopDescription") as string)?.trim() || undefined;
+      }
+
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          setSubmitError((data.error as string) || t("errorGeneric"));
+          setSubmitStatus("error");
+          return;
+        }
+        setSubmitStatus("success");
+        form.reset();
+        setInquiryType("");
+        setPhone("");
+        setShopPhone("");
+        setShopWhatsapp("");
+        setSelectedSize(initialSize);
+        setQuantity(initialQuantity);
+        // Clear product from URL after order submit so product preview disappears
+        if (formType === "order") {
+          router.push("/contact");
+        }
+      } catch {
+        setSubmitError(t("errorGeneric"));
+        setSubmitStatus("error");
+      }
+    },
+    [locale, initialSize, initialQuantity, t, router]
+  );
+
   return (
     <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10">
       <h2 className="text-2xl font-serif font-semibold text-softBlack-900 mb-6">
-        {hasProduct ? t("orderFormTitle") : t("formTitle")}
+        {hasProduct && isClientForm ? t("orderFormTitle") : t("formTitle")}
       </h2>
 
-      {/* Product Preview */}
-      {hasProduct && (
+      {/* Product Preview – only when Product Order is selected */}
+      {hasProduct && isClientForm && (
         <div className="mb-8 p-4 bg-beige-50 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-medium text-softBlack-500">
@@ -191,7 +310,7 @@ function ContactFormInner() {
         </div>
       )}
 
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {/* Name fields */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
@@ -365,6 +484,151 @@ function ContactFormInner() {
           </div>
         )}
 
+        {/* Partner Form Extra Fields */}
+        {isPartnerForm && (
+          <div className="space-y-6 p-6 bg-gold-50/50 rounded-2xl border border-gold-200">
+            <p className="text-sm font-semibold text-softBlack-800">
+              {t("partnerInfoTitle")}
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="shopName" className="block text-sm font-medium text-softBlack-700 mb-2">
+                  {t("shopName")} *
+                </label>
+                <input
+                  type="text"
+                  id="shopName"
+                  name="shopName"
+                  required
+                  className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                  placeholder={t("shopNamePlaceholder")}
+                />
+              </div>
+              <div>
+                <label htmlFor="shopCity" className="block text-sm font-medium text-softBlack-700 mb-2">
+                  {t("shopCity")} *
+                </label>
+                <input
+                  type="text"
+                  id="shopCity"
+                  name="shopCity"
+                  required
+                  className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                  placeholder={t("shopCityPlaceholder")}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="shopNeighborhood" className="block text-sm font-medium text-softBlack-700 mb-2">
+                {t("shopNeighborhood")}
+              </label>
+              <input
+                type="text"
+                id="shopNeighborhood"
+                name="shopNeighborhood"
+                className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                placeholder={t("shopNeighborhoodPlaceholder")}
+              />
+            </div>
+            <div>
+              <label htmlFor="shopAddress" className="block text-sm font-medium text-softBlack-700 mb-2">
+                {t("shopAddress")}
+              </label>
+              <input
+                type="text"
+                id="shopAddress"
+                name="shopAddress"
+                className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                placeholder={t("shopAddressPlaceholder")}
+              />
+            </div>
+            <div>
+              <label htmlFor="shopPhone" className="block text-sm font-medium text-softBlack-700 mb-2">
+                {t("shopPhone")}
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-4 py-3 bg-beige-100 border border-r-0 border-beige-200 rounded-l-xl text-softBlack-700 text-sm font-medium select-none">
+                  +212
+                </span>
+                <input
+                  type="tel"
+                  id="shopPhone"
+                  name="shopPhone"
+                  value={shopPhone}
+                  onChange={handleShopPhoneChange}
+                  maxLength={10}
+                  className="w-full px-4 py-3 border border-beige-200 rounded-r-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                  placeholder={t("phonePlaceholder")}
+                />
+              </div>
+              <p className="text-xs text-softBlack-400 mt-1">
+                {t("phoneFormat")}
+              </p>
+            </div>
+            <div>
+              <label htmlFor="shopWhatsapp" className="block text-sm font-medium text-softBlack-700 mb-2">
+                {t("shopWhatsapp")}
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-4 py-3 bg-beige-100 border border-r-0 border-beige-200 rounded-l-xl text-softBlack-700 text-sm font-medium select-none">
+                  +212
+                </span>
+                <input
+                  type="tel"
+                  id="shopWhatsapp"
+                  name="shopWhatsapp"
+                  value={shopWhatsapp}
+                  onChange={handleShopWhatsappChange}
+                  maxLength={10}
+                  className="w-full px-4 py-3 border border-beige-200 rounded-r-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                  placeholder={t("phonePlaceholder")}
+                />
+              </div>
+              <p className="text-xs text-softBlack-400 mt-1">
+                {t("phoneFormat")}
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="shopInstagram" className="block text-sm font-medium text-softBlack-700 mb-2">
+                  {t("shopInstagram")}
+                </label>
+                <input
+                  type="text"
+                  id="shopInstagram"
+                  name="shopInstagram"
+                  className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                  placeholder={t("shopInstagramPlaceholder")}
+                />
+              </div>
+              <div>
+                <label htmlFor="shopWebsite" className="block text-sm font-medium text-softBlack-700 mb-2">
+                  {t("shopWebsite")}
+                </label>
+                <input
+                  type="url"
+                  id="shopWebsite"
+                  name="shopWebsite"
+                  className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white"
+                  placeholder={t("shopWebsitePlaceholder")}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="shopDescription" className="block text-sm font-medium text-softBlack-700 mb-2">
+                {t("shopDescription")}
+              </label>
+              <textarea
+                id="shopDescription"
+                name="shopDescription"
+                rows={3}
+                className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors bg-white resize-none"
+                placeholder={t("shopDescriptionPlaceholder")}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Message */}
         <div>
           <label
@@ -377,7 +641,7 @@ function ContactFormInner() {
             id="message"
             name="message"
             rows={5}
-            required={false}    // optional field so no required
+            required={false}
             className="w-full px-4 py-3 border border-beige-200 rounded-xl focus:outline-none focus:border-gold-500 transition-colors resize-none"
             placeholder={t("messagePlaceholder")}
           />
@@ -400,23 +664,32 @@ function ContactFormInner() {
         {hasProduct && (
           <>
             <input type="hidden" name="productName" value={productName || ""} />
-            <input
-              type="hidden"
-              name="productPrice"
-              value={productPrice || ""}
-            />
+            <input type="hidden" name="productPrice" value={productPrice || ""} />
+            <input type="hidden" name="productImage" value={productImage || ""} />
             <input type="hidden" name="selectedSize" value={selectedSize} />
-            <input type="hidden" name="quantity" value={quantity} />
+            <input type="hidden" name="quantity" value={String(quantity)} />
             <input type="hidden" name="shopSlug" value={shopSlug} />
             <input type="hidden" name="productSlug" value={productSlug} />
           </>
         )}
 
+        {submitStatus === "success" && (
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm">
+            {t("successMessage")}
+          </div>
+        )}
+        {submitStatus === "error" && submitError && (
+          <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
+            {submitError}
+          </div>
+        )}
+
         <button
           type="submit"
-          className="w-full py-4 bg-softBlack-900 text-white font-medium rounded-full hover:bg-softBlack-800 transition-colors"
+          disabled={submitStatus === "loading"}
+          className="w-full py-4 bg-softBlack-900 text-white font-medium rounded-full hover:bg-softBlack-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {hasProduct ? t("submitOrder") : t("send")}
+          {submitStatus === "loading" ? t("sending") : hasProduct && isClientForm ? t("submitOrder") : t("send")}
         </button>
       </form>
     </div>

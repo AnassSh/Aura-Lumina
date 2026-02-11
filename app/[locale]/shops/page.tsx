@@ -284,7 +284,7 @@ export default async function ShopsPage() {
               {t("ctaDesc")}
             </p>
             <Link
-              href="/contact"
+              href="/contact?inquiry=partner"
               className="inline-flex items-center px-6 py-3 bg-gold-500 text-softBlack-900 font-medium rounded-full hover:bg-gold-400 transition-colors"
             >
               {t("becomePartner")}
