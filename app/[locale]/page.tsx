@@ -293,10 +293,10 @@ export default async function HomePage() {
         <div className="container-custom text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-softBlack-900 mb-6">{t("stayInspired")}</h2>
           <p className="text-lg text-softBlack-600 max-w-2xl mx-auto mb-8">{t("newsletterDesc")}</p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <form className="flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
             <label htmlFor="homepage-newsletter-email" className="sr-only">{t("emailAria")}</label>
-            <input id="homepage-newsletter-email" name="email" type="email" autoComplete="email" placeholder={t("emailPlaceholder")} className="flex-1 px-6 py-4 rounded-full border border-beige-300 focus:outline-none focus:border-gold-500 bg-white" />
-            <button type="submit" className="btn-primary">{t("subscribe")}</button>
+            <input id="homepage-newsletter-email" name="email" type="email" autoComplete="email" placeholder={t("emailPlaceholder")} className="w-full min-w-0 flex-1 px-6 py-4 rounded-full border border-beige-300 focus:outline-none focus:border-gold-500 bg-white" />
+            <button type="submit" className="w-full sm:w-auto btn-primary">{t("subscribe")}</button>
           </form>
         </div>
       </section>

@@ -162,19 +162,33 @@ SEO metadata is configured in `app/layout.tsx`
 
 ## 📄 License
 
-## 📬 Contact API (CRM + n8n / Strapi)
+## 📬 Contact API (CRM + n8n + Telegram + Payload CMS)
 
 The contact page has two main flows: **product orders** (clients) and **shop partner** applications. Both submit to:
 
 - **`POST /api/contact`** – JSON body with `formType`: `"order"` | `"partner"` | `"general"`.
 
-Payloads are validated and returned as structured JSON (ready for n8n or Strapi). Optional env vars forward submissions to n8n webhooks for WhatsApp or other automation:
+Payloads are validated and returned as structured JSON. Optional env vars forward submissions to **n8n** webhooks (e.g. self-hosted n8n in a folder next to this project). In n8n you can:
 
-- `N8N_WEBHOOK_URL_ORDER` – product order submissions
-- `N8N_WEBHOOK_URL_PARTNER` – partner applications  
+- **Telegram** – send order/partner notifications to a Telegram chat (or channel).
+- **Payload CMS** – create/update products, clients (orders), and partners in Payload.
+
+Env vars (see `.env.example`):
+
+- `N8N_WEBHOOK_URL_ORDER` – product order submissions → n8n → Telegram / Payload
+- `N8N_WEBHOOK_URL_PARTNER` – partner applications → n8n → Telegram / Payload
 - `N8N_WEBHOOK_URL_GENERAL` – general inquiries
 
-See `.env.example`. You can then in n8n trigger WhatsApp messages, or POST the same payload to Strapi (or any CRM).
+**Payload CMS** will be used as headless CMS for products, clients, and partners; the same contact payloads can be sent from n8n to Payload (or later from this API directly).
+
+### Payload CMS app (`aura-lumina-cms/`)
+
+The Payload admin and API live in the **`aura-lumina-cms/`** folder (template from [Payload’s GitHub](https://github.com/payloadcms/payload)). To run the CMS:
+
+1. Go to `aura-lumina-cms/` and see **`PAYLOAD-SETUP.md`** for install and first run.
+2. Set `DATABASE_URL` (PostgreSQL – use free tier from [Neon](https://neon.tech) or [Supabase](https://supabase.com)), `PAYLOAD_SECRET`, and `NEXT_PUBLIC_SERVER_URL` in `aura-lumina-cms/.env`.
+3. Run `npm install` then `npm run dev` in `aura-lumina-cms/`; open `/admin` to create the first user.
+4. See **`aura-lumina-cms/WORKFLOW-N8N-TELEGRAM.md`** for the Form → n8n → Payload CMS → Telegram workflow.
 
 ---
 

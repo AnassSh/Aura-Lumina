@@ -80,16 +80,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="w-full overflow-x-hidden" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
+          content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
         />
       </head>
 
-      <body className="min-h-screen flex flex-col bg-[#F9F7F4] text-[#1F1F1F]" suppressHydrationWarning>
+      <body className="min-h-screen w-full max-w-[100vw] overflow-x-hidden flex flex-col bg-[#F9F7F4] text-[#1F1F1F]" suppressHydrationWarning>
         {children}
       </body>
     </html>

@@ -2,12 +2,11 @@
  * Contact API – CRM + automation ready
  *
  * Handles two form types:
- * - order: Client product order (confirm order + client info) → n8n / WhatsApp / Strapi
- * - partner: Shop partnership application → n8n / WhatsApp / Strapi
+ * - order: Client product order (confirm order + client info) → n8n → Telegram / Payload CMS
+ * - partner: Shop partnership application → n8n → Telegram / Payload CMS
  *
- * Optional: set N8N_WEBHOOK_URL_ORDER and N8N_WEBHOOK_URL_PARTNER in env
- * to forward payloads to n8n for WhatsApp automation.
- * Strapi: later you can POST this payload to Strapi REST API from n8n or from here.
+ * Optional: set N8N_WEBHOOK_URL_ORDER, N8N_WEBHOOK_URL_PARTNER, N8N_WEBHOOK_URL_GENERAL
+ * to forward payloads to self-hosted n8n (e.g. Telegram notifications, Payload CMS).
  */
 
 import { NextRequest, NextResponse } from "next/server";

@@ -76,7 +76,7 @@ export default function Footer() {
                 {t("subscribeDesc")}
               </p>
             </div>
-            <form className="flex w-full md:w-auto max-w-md gap-3">
+            <form className="flex flex-col sm:flex-row w-full sm:w-auto sm:max-w-md gap-3">
               <label htmlFor="footer-newsletter-email" className="sr-only">
                 {t("emailPlaceholder")}
               </label>
@@ -86,11 +86,11 @@ export default function Footer() {
                 type="email"
                 autoComplete="email"
                 placeholder={t("emailPlaceholder")}
-                className="flex-1 px-4 py-3 bg-softBlack-800 border border-softBlack-600 rounded-full text-beige-100 placeholder-beige-400 focus:outline-none focus:border-gold-500 transition-colors"
+                className="w-full min-w-0 flex-1 px-4 py-3 bg-softBlack-800 border border-softBlack-600 rounded-full text-beige-100 placeholder-beige-400 focus:outline-none focus:border-gold-500 transition-colors"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-gold-500 text-softBlack-900 font-medium rounded-full hover:bg-gold-400 transition-colors whitespace-nowrap"
+                className="w-full sm:w-auto px-6 py-3 bg-gold-500 text-softBlack-900 font-medium rounded-full hover:bg-gold-400 transition-colors whitespace-nowrap"
               >
                 {t("subscribe")}
               </button>

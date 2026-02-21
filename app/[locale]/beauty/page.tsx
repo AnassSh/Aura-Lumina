@@ -131,7 +131,7 @@ export default async function BeautyPage() {
               <p className="text-softBlack-600 mb-6">
                 {t("newsletterDesc")}
               </p>
-              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <form className="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto">
                 <label htmlFor="beauty-newsletter-email" className="sr-only">
                   {t("emailAria")}
                 </label>
@@ -141,11 +141,11 @@ export default async function BeautyPage() {
                   type="email"
                   autoComplete="email"
                   placeholder={t("emailPlaceholder")}
-                  className="flex-1 px-5 py-3 rounded-full border border-beige-200 text-sm focus:outline-none focus:border-rose-400"
+                  className="w-full min-w-0 flex-1 px-5 py-3 rounded-full border border-beige-200 text-sm focus:outline-none focus:border-rose-400"
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-rose-500 text-white font-medium rounded-full hover:bg-rose-600 transition-colors"
+                  className="w-full sm:w-auto px-6 py-3 bg-rose-500 text-white font-medium rounded-full hover:bg-rose-600 transition-colors"
                 >
                   {t("subscribe")}
                 </button>

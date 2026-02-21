@@ -117,9 +117,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; shopSlug: string };
+  params: Promise<{ locale: string; shopSlug: string }>;
 }): Promise<Metadata> {
-  const data = shopData[params.shopSlug];
+  const { shopSlug } = await params;
+  const data = shopData[shopSlug];
   if (!data) return { title: "Shop Not Found" };
 
   const { shop } = data;
@@ -138,10 +139,11 @@ export async function generateMetadata({
 export default async function ShopProductsPage({
   params,
 }: {
-  params: { locale: string; shopSlug: string };
+  params: Promise<{ locale: string; shopSlug: string }>;
 }) {
+  const { shopSlug } = await params;
   const t = await getTranslations("product");
-  const data = shopData[params.shopSlug];
+  const data = shopData[shopSlug];
 
   if (!data) {
     return (

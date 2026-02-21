@@ -18,9 +18,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; shopSlug: string };
+  params: Promise<{ locale: string; shopSlug: string }>;
 }): Promise<Metadata> {
-  const shop = shops[params.shopSlug];
+  const { shopSlug } = await params;
+  const shop = shops[shopSlug];
 
   if (!shop) {
     return { title: "Shop Not Found" };
@@ -52,9 +53,10 @@ export async function generateMetadata({
 export default async function ShopProfilePage({
   params,
 }: {
-  params: { locale: string; shopSlug: string };
+  params: Promise<{ locale: string; shopSlug: string }>;
 }) {
-  const shop = shops[params.shopSlug];
+  const { shopSlug } = await params;
+  const shop = shops[shopSlug];
   const t = await getTranslations("shops");
 
   if (!shop) {
@@ -236,7 +238,7 @@ export default async function ShopProfilePage({
                   {t("featuredPieces")}
                 </h2>
                 <Link
-                  href={`/shops/${params.shopSlug}/products`}
+                  href={`/shops/${shopSlug}/products`}
                   className="text-gold-600 font-medium hover:underline text-sm"
                 >
                   {t("viewAllProducts")}
@@ -246,7 +248,7 @@ export default async function ShopProfilePage({
                 {shop.featuredProducts.map((product) => (
                   <Link
                     key={product.id}
-                    href={`/shops/${params.shopSlug}/products/${product.slug}`}
+                    href={`/shops/${shopSlug}/products/${product.slug}`}
                     className="group block"
                   >
                     <article>
@@ -271,7 +273,7 @@ export default async function ShopProfilePage({
               </div>
               <div className="text-center mt-8">
                 <Link
-                  href={`/shops/${params.shopSlug}/products`}
+                  href={`/shops/${shopSlug}/products`}
                   className="btn-secondary"
                 >
                   {t("browseAllProducts")}

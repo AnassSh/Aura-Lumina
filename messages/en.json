@@ -335,6 +335,7 @@
     "findFit": "Find Your Perfect Fit",
     "findFitDesc": "Not sure about your size? Check out our comprehensive size guide with measurements and fit tips.",
     "viewSizeGuide": "View Size Guide",
+    "backToLookbooks": "Back to Lookbooks",
     "sale": "Sale",
     "new": "New",
     "bestseller": "Bestseller",
@@ -346,11 +347,16 @@
     "lb3Desc": "Statement abayas for weddings, Eid celebrations, and formal events. Make an entrance.",
     "lb4Title": "Spring Awakening",
     "lb4Desc": "Light fabrics and pastel hues for the warmer months. Fresh, feminine, and full of life.",
+    "abaya1": "Midnight Elegance Abaya",
+    "abaya2": "Desert Rose Collection",
+    "abaya3": "Pearl Embroidered Abaya",
+    "abaya4": "Velvet Dreams Abaya",
     "lbProd1Title": "Midnight Elegance Abaya",
     "lbProd2Title": "Desert Rose Collection",
     "lbProd3Title": "Pearl Embroidered Abaya",
     "lbProd4Title": "Velvet Dreams Abaya",
-    "lbProd5Title": "Classic Black Abaya"
+    "lbProd5Title": "Classic Black Abaya",
+    "lbProd6Title": "Navy Elegance Abaya"
   },
   "blog": {
     "metaTitle": "Blog | Modest Fashion & Beauty Tips",

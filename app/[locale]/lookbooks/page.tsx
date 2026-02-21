@@ -180,17 +180,17 @@ export default async function LookbooksPage() {
       </section>
 
       <section className="container-custom py-12">
-        <div className="bg-gradient-to-r from-gold-100 via-beige-100 to-rose-100 rounded-3xl p-8 md:p-12">
+        <div className="bg-gradient-to-r from-gold-100 via-beige-100 to-rose-100 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-2xl font-serif font-bold text-softBlack-900 mb-2">
+            <div className="w-full md:max-w-xl">
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-softBlack-900 mb-2">
                 {t("findFit")}
               </h3>
-              <p className="text-softBlack-600 max-w-xl">
+              <p className="text-softBlack-600">
                 {t("findFitDesc")}
               </p>
             </div>
-            <Link href="/size-guide" className="btn-primary whitespace-nowrap">
+            <Link href="/size-guide" className="w-full sm:w-auto btn-primary whitespace-nowrap text-center">
               {t("viewSizeGuide")}
             </Link>
           </div>

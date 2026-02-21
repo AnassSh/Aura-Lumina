@@ -335,6 +335,7 @@
     "findFit": "Trouvez votre taille",
     "findFitDesc": "Un doute sur votre taille ? Consultez notre guide des tailles avec mensurations et conseils.",
     "viewSizeGuide": "Voir le guide des tailles",
+    "backToLookbooks": "Retour aux lookbooks",
     "sale": "Solde",
     "new": "Nouveau",
     "bestseller": "Best-seller",
@@ -346,11 +347,16 @@
     "lb3Desc": "Abayas statement pour mariages, Aid et événements formels. Entrez en scène.",
     "lb4Title": "Éveil de printemps",
     "lb4Desc": "Tissus légers et tons pastel pour les beaux jours. Fraîcheur, féminité et vitalité.",
+    "abaya1": "Abaya Midnight Elegance",
+    "abaya2": "Collection Desert Rose",
+    "abaya3": "Abaya brodée perles",
+    "abaya4": "Abaya Velvet Dreams",
     "lbProd1Title": "Abaya Midnight Elegance",
     "lbProd2Title": "Collection Desert Rose",
     "lbProd3Title": "Abaya brodée perles",
     "lbProd4Title": "Abaya Velvet Dreams",
-    "lbProd5Title": "Abaya noire classique"
+    "lbProd5Title": "Abaya noire classique",
+    "lbProd6Title": "Abaya élégance marine"
   },
   "blog": {
     "metaTitle": "Blog | Conseils Mode Pudique & Beauté",

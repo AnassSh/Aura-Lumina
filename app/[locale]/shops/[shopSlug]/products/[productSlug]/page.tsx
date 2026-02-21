@@ -267,12 +267,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { shopSlug: string; productSlug: string };
+  params: Promise<{ locale: string; shopSlug: string; productSlug: string }>;
 }): Promise<Metadata> {
-  const shopData = shopProducts[params.shopSlug];
+  const { shopSlug, productSlug } = await params;
+  const shopData = shopProducts[shopSlug];
   if (!shopData) return { title: "Product Not Found" };
 
-  const product = shopData.products[params.productSlug];
+  const product = shopData.products[productSlug];
   if (!product) return { title: "Product Not Found" };
 
   const { shop } = shopData;
@@ -298,12 +299,13 @@ export async function generateMetadata({
   };
 }
 
-export default function ProductPage({
+export default async function ProductPage({
   params,
 }: {
-  params: { locale: string; shopSlug: string; productSlug: string };
+  params: Promise<{ locale: string; shopSlug: string; productSlug: string }>;
 }) {
-  const shopData = shopProducts[params.shopSlug];
+  const { shopSlug, productSlug } = await params;
+  const shopData = shopProducts[shopSlug];
 
   if (!shopData) {
     return (
@@ -321,7 +323,7 @@ export default function ProductPage({
   }
 
   const { shop, products } = shopData;
-  const product = products[params.productSlug];
+  const product = products[productSlug];
 
   if (!product) {
     return (
