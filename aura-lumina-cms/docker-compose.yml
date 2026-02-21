@@ -1,0 +1,20 @@
+# This app uses SQLite (file:./payload.db) – no database container needed.
+# Use this only if you want to run the Next.js app in Docker.
+
+version: '3'
+
+services:
+  payload:
+    image: node:18-alpine
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    working_dir: /home/node/app/
+    command: sh -c "pnpm install && pnpm dev"
+    env_file:
+      - .env
+
+volumes:
+  node_modules:
