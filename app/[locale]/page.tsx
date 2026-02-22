@@ -7,12 +7,12 @@ import { ProductCard } from "@/components/ui/Card";
 
 // Import from centralized data layer
 import {
-  getFeaturedAbayas,
-  getShopProductListings,
+  getFeaturedAbayasAsync,
+  getShopProductListingsAsync,
   getBeautyTips,
   getLatestPosts,
   getShopTheLook,
-  getEditorsPicks
+  getEditorsPicks,
 } from "@/lib/data";
 
 export async function generateMetadata({
@@ -28,16 +28,18 @@ export async function generateMetadata({
   };
 }
 
-// Get data from centralized data layer
-const featuredAbayas = getFeaturedAbayas();
-const beautyTips = getBeautyTips();
-const editorsPicks = getEditorsPicks().slice(0, 4);
-const latestPosts = getLatestPosts();
-const shopProducts = getShopProductListings();
-const shopTheLook = getShopTheLook();
-
 export default async function HomePage() {
   const t = await getTranslations("home");
+
+  // Data from Payload CMS or static fallback
+  const [featuredAbayas, shopProducts] = await Promise.all([
+    getFeaturedAbayasAsync(),
+    getShopProductListingsAsync(),
+  ]);
+  const beautyTips = getBeautyTips();
+  const editorsPicks = getEditorsPicks().slice(0, 4);
+  const latestPosts = getLatestPosts();
+  const shopTheLook = getShopTheLook();
 
   return (
     <>

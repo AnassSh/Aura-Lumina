@@ -2,15 +2,17 @@
 // AURA LUMINA - CENTRALIZED DATA LAYER
 // =============================================================================
 // Single import point for all data
+// Payload CMS: when PAYLOAD_API_URL is set, products & shops come from Payload.
+// Otherwise, static data is used.
 // =============================================================================
 
 // Types
 export * from "./types";
 
-// Abayas
+// Abayas (sync – static only)
 export { getFeaturedAbayas, getLookbookFeaturedAbayas } from "./abayas";
 
-// Shops
+// Shops (sync – static only)
 export {
   shops,
   cities,
@@ -30,3 +32,14 @@ export {
   getLatestPosts,
   getShopTheLook,
 } from "./lookbooks";
+
+// Async data (Payload or static fallback)
+export {
+  getFeaturedAbayasAsync,
+  getLookbookFeaturedAbayasAsync,
+  getShopsAsync,
+  getShopAsync,
+  getAllShopSlugsAsync,
+  getAllShopListingsAsync,
+  getShopProductListingsAsync,
+} from "./data-with-payload";

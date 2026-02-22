@@ -74,6 +74,8 @@ export interface Config {
     users: User;
     orders: Order;
     partners: Partner;
+    shops: Shop;
+    products: Product;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -98,6 +100,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
+    shops: ShopsSelect<false> | ShopsSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -841,6 +845,125 @@ export interface Partner {
   createdAt: string;
 }
 /**
+ * Partner shops / boutiques
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shops".
+ */
+export interface Shop {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  tagline?: string | null;
+  location?: {
+    city?: string | null;
+    neighborhood?: string | null;
+    address?: string | null;
+    /**
+     * Google Maps URL
+     */
+    mapUrl?: string | null;
+  };
+  contact?: {
+    phone?: string | null;
+    whatsapp?: string | null;
+    instagram?: string | null;
+    facebook?: string | null;
+  };
+  story?: string | null;
+  /**
+   * e.g. 2015
+   */
+  established?: string | null;
+  /**
+   * Hero / main shop image
+   */
+  image?: (number | null) | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * e.g. Handcrafted Abayas, Bridal Collections
+   */
+  specialties?:
+    | {
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Products to show on this shop profile
+   */
+  featuredProducts?: (number | Product)[] | null;
+  hours?: {
+    weekdays?: string | null;
+    saturday?: string | null;
+    sunday?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Abaya products / shop items
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * e.g. 1,850 MAD
+   */
+  price: string;
+  /**
+   * Original price for sale items (e.g. 2,000 MAD)
+   */
+  originalPrice?: string | null;
+  /**
+   * Product image
+   */
+  image?: (number | null) | Media;
+  /**
+   * Fallback: external or static path (e.g. /images/abaya-1.svg)
+   */
+  imageUrl?: string | null;
+  colors?:
+    | {
+        color?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sizes?:
+    | {
+        size?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  badge?: ('new' | 'bestseller' | 'sale') | null;
+  featured?: boolean | null;
+  lookbookFeatured?: boolean | null;
+  filterCategory?: ('all' | 'new' | 'bestseller' | 'sale' | 'everyday' | 'formal') | null;
+  /**
+   * Shop this product belongs to
+   */
+  shop?: (number | null) | Shop;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -1057,6 +1180,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'partners';
         value: number | Partner;
+      } | null)
+    | ({
+        relationTo: 'shops';
+        value: number | Shop;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1472,6 +1603,89 @@ export interface PartnersSelect<T extends boolean = true> {
   shopInstagram?: T;
   shopWebsite?: T;
   shopDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shops_select".
+ */
+export interface ShopsSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  tagline?: T;
+  location?:
+    | T
+    | {
+        city?: T;
+        neighborhood?: T;
+        address?: T;
+        mapUrl?: T;
+      };
+  contact?:
+    | T
+    | {
+        phone?: T;
+        whatsapp?: T;
+        instagram?: T;
+        facebook?: T;
+      };
+  story?: T;
+  established?: T;
+  image?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  specialties?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  featuredProducts?: T;
+  hours?:
+    | T
+    | {
+        weekdays?: T;
+        saturday?: T;
+        sunday?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  price?: T;
+  originalPrice?: T;
+  image?: T;
+  imageUrl?: T;
+  colors?:
+    | T
+    | {
+        color?: T;
+        id?: T;
+      };
+  sizes?:
+    | T
+    | {
+        size?: T;
+        id?: T;
+      };
+  badge?: T;
+  featured?: T;
+  lookbookFeatured?: T;
+  filterCategory?: T;
+  shop?: T;
   updatedAt?: T;
   createdAt?: T;
 }

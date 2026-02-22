@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
 import { Orders } from './collections/Orders'
+import { Products } from './collections/Products'
+import { Shops } from './collections/Shops'
 import { Partners } from './collections/Partners'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -56,7 +58,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Orders, Partners],
+  collections: [Pages, Posts, Media, Categories, Users, Orders, Partners, Shops, Products],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,

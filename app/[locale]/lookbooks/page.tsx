@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 // Import from centralized data layer
 import {
   getAllLookbooks,
-  getLookbookFeaturedAbayas,
+  getLookbookFeaturedAbayasAsync,
   lookbookCategories,
   COLOR_HEX_MAP,
 } from "@/lib/data";
@@ -30,10 +30,10 @@ export async function generateMetadata({
 // Get data from centralized data layer
 const lookbooksConfig = getAllLookbooks();
 const categoryKeys = lookbookCategories;
-const featuredProductsConfig = getLookbookFeaturedAbayas();
 const colorToHex = COLOR_HEX_MAP;
 
 export default async function LookbooksPage() {
+  const featuredProductsConfig = await getLookbookFeaturedAbayasAsync();
   const t = await getTranslations("lookbooks");
   const tProduct = await getTranslations("product");
 

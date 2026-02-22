@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 // Import from centralized data layer
-import { getAllShopListings, cities } from "@/lib/data";
+import { getAllShopListingsAsync, cities } from "@/lib/data";
 
 export async function generateMetadata({
   params,
@@ -25,10 +25,8 @@ export async function generateMetadata({
   };
 }
 
-// Get data from centralized data layer
-const shops = getAllShopListings();
-
 export default async function ShopsPage() {
+  const shops = await getAllShopListingsAsync();
   const t = await getTranslations("shops");
 
   return (
