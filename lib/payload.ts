@@ -3,7 +3,8 @@
  * Fetches products, shops, etc. from the Payload instance.
  */
 
-const API_URL = process.env.PAYLOAD_API_URL || ""
+// Support both: PAYLOAD_API_URL (server-only) and NEXT_PUBLIC_PAYLOAD_API_URL (fallback for Vercel)
+const API_URL = process.env.PAYLOAD_API_URL || process.env.NEXT_PUBLIC_PAYLOAD_API_URL || ""
 
 export function isPayloadConfigured(): boolean {
   return Boolean(API_URL)

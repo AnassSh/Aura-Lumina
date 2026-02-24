@@ -5,19 +5,26 @@
  */
 import { NextResponse } from "next/server";
 
-const API_URL = process.env.PAYLOAD_API_URL || "";
+const API_URL =
+  process.env.PAYLOAD_API_URL || process.env.NEXT_PUBLIC_PAYLOAD_API_URL || "";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   const payloadConfigured = Boolean(API_URL);
+  const source = process.env.PAYLOAD_API_URL
+    ? "PAYLOAD_API_URL"
+    : process.env.NEXT_PUBLIC_PAYLOAD_API_URL
+      ? "NEXT_PUBLIC_PAYLOAD_API_URL"
+      : "none";
 
   if (!payloadConfigured) {
     return NextResponse.json({
       ok: false,
       payloadConfigured: false,
-      error: "PAYLOAD_API_URL is not set in environment variables",
-      hint: "Add PAYLOAD_API_URL to your main site's Vercel env vars (e.g. https://aura-lumina-cms.vercel.app/api)",
+      envSource: source,
+      error: "Neither PAYLOAD_API_URL nor NEXT_PUBLIC_PAYLOAD_API_URL is set",
+      hint: "Add NEXT_PUBLIC_PAYLOAD_API_URL to Vercel (e.g. https://aura-lumina-cms.vercel.app/api) - this prefix works reliably on Vercel",
     });
   }
 
@@ -45,6 +52,7 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       payloadConfigured: true,
+      envSource: source,
       shopsCount: docs.length,
       shopNames,
       message:
