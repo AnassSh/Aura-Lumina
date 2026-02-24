@@ -101,13 +101,13 @@ export default function ProductGrid({
                     <p className="text-xs font-medium text-softBlack-600 mb-1.5">
                       {translations["selectSize"] || "Select Size"}
                     </p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {product.sizes.map((size) => (
                         <button
                           key={size}
                           type="button"
                           onClick={() => setSize(product.id, size)}
-                          className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                          className={`min-h-[2.25rem] px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-full border transition-colors ${
                             selectedSize === size
                               ? "bg-softBlack-900 text-white border-softBlack-900"
                               : "border-beige-200 text-softBlack-700 hover:border-gold-500"
@@ -120,13 +120,13 @@ export default function ProductGrid({
                   </div>
                 )}
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                   {product.colors?.map((color) => (
                     <button
                       key={color}
                       type="button"
                       title={color}
-                      className="w-6 h-6 rounded-full border-2 border-beige-200 hover:border-gold-500 transition-colors"
+                      className="min-w-[1.75rem] min-h-[1.75rem] w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-beige-200 hover:border-gold-500 transition-colors flex-shrink-0"
                       style={{
                         backgroundColor: colorToHex[color] ?? "#ddd",
                       }}

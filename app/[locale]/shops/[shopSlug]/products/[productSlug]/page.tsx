@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import ProductActions from "@/components/ProductActions";
+import { getProductDetailFromPayload } from "@/lib/data";
 
 // Types
 interface Product {
@@ -271,16 +272,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { shopSlug, productSlug } = await params;
   const shopData = shopProducts[shopSlug];
-  if (!shopData) return { title: "Product Not Found" };
-
-  const product = shopData.products[productSlug];
+  let product = shopData?.products[productSlug];
+  let shop = shopData?.shop;
+  if (!product) {
+    const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
+    if (payloadDetail) {
+      product = payloadDetail.product;
+      shop = payloadDetail.shop;
+    }
+  }
+  if (!shopData && !shop) return { title: "Product Not Found" };
   if (!product) return { title: "Product Not Found" };
 
-  const { shop } = shopData;
-
+  const description = product.description
+    ? `${product.description.slice(0, 150)}... Available at ${shop.name} in ${shop.neighborhood}, ${shop.city}. ${product.price}.`
+    : `${product.name} - ${product.price}. Available at ${shop.name} in ${shop.city}.`;
   return {
     title: `${product.name} | ${shop.name} - ${shop.city}`,
-    description: `${product.description.slice(0, 150)}... Available at ${shop.name} in ${shop.neighborhood}, ${shop.city}. ${product.price}.`,
+    description,
     keywords: [
       product.name,
       product.category,
@@ -292,7 +301,7 @@ export async function generateMetadata({
     ],
     openGraph: {
       title: `${product.name} - ${product.price}`,
-      description: product.description,
+      description: product.description || description,
       images: product.images,
       type: "website",
     },
@@ -322,8 +331,17 @@ export default async function ProductPage({
     );
   }
 
-  const { shop, products } = shopData;
-  const product = products[productSlug];
+  let shop = shopData.shop;
+  let product = shopData.products[productSlug];
+
+  // If not in mock, try Payload CMS (colors will have hex for circles)
+  if (!product) {
+    const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
+    if (payloadDetail) {
+      product = payloadDetail.product;
+      shop = payloadDetail.shop;
+    }
+  }
 
   if (!product) {
     return (
@@ -340,10 +358,10 @@ export default async function ProductPage({
     );
   }
 
-  // Get other products from same shop
-  const otherProducts = Object.values(products)
-    .filter((p) => p.slug !== product.slug)
-    .slice(0, 3);
+  // Get other products from same shop (mock only; Payload-sourced product has no list here)
+  const otherProducts = product === shopData.products[productSlug]
+    ? Object.values(shopData.products).filter((p) => p.slug !== product.slug).slice(0, 3)
+    : [];
 
   return (
     <div className="pt-24 pb-20">

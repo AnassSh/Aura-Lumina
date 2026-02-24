@@ -13,6 +13,9 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import { Lookbooks } from './collections/Lookbooks'
+import { LookbookProducts } from './collections/LookbookProducts'
+import { BeautyProducts } from './collections/BeautyProducts'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -58,7 +61,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Orders, Partners, Shops, Products],
+  collections: [Pages, Posts, Media, Categories, Users, Orders, Partners, Shops, Products, Lookbooks, LookbookProducts, BeautyProducts],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,

@@ -81,7 +81,7 @@ export function ProductCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {badge && (
-            <span className="absolute top-4 right-4 px-3 py-1 bg-rose-500 text-white text-xs font-semibold rounded-full">
+            <span className="absolute top-4 right-4 px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-full">
               {badge}
             </span>
           )}

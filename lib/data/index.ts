@@ -42,4 +42,8 @@ export {
   getAllShopSlugsAsync,
   getAllShopListingsAsync,
   getShopProductListingsAsync,
+  getProductDetailFromPayload,
+  getLookbooksAsync,
+  getLookbookProductsAsync,
+  getEditorsPicksAsync,
 } from "./data-with-payload";

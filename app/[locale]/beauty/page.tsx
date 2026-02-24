@@ -4,9 +4,11 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import SectionHeader from "@/components/ui/SectionHeader";
 
+export const dynamic = "force-dynamic";
+
 // Import from centralized data layer
 import {
-  getEditorsPicks,
+  getEditorsPicksAsync,
   quickTips,
 } from "@/lib/data";
 
@@ -23,12 +25,13 @@ export async function generateMetadata({
   };
 }
 
-// Get data from centralized data layer
 const quickTipKeys = quickTips;
-const featuredProducts = getEditorsPicks();
 
 export default async function BeautyPage() {
-  const t = await getTranslations("beauty");
+  const [featuredProducts, t] = await Promise.all([
+    getEditorsPicksAsync(),
+    getTranslations("beauty"),
+  ]);
 
   return (
     <div className="pt-24 pb-20">

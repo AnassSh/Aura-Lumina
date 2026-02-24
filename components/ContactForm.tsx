@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useState, useCallback, useEffect, Suspense } from "react";
 import Image from "next/image";
 import type { ContactFormType } from "@/app/api/contact/route";
+import { COLOR_HEX_MAP } from "@/lib/data/types";
 
 const inquiryTypeKeys = [
   "inquiryClientForm",
@@ -36,6 +37,7 @@ function ContactFormInner() {
   const initialQuantity = parseInt(searchParams.get("quantity") || "1", 10);
   const shopSlug = searchParams.get("shopSlug") || "";
   const productSlug = searchParams.get("productSlug") || "";
+  const productColor = searchParams.get("color") || "";
   const inquiryParam = searchParams.get("inquiry");
 
   const hasProduct = !!productName;
@@ -157,6 +159,7 @@ function ContactFormInner() {
         payload.productPrice = (fd.get("productPrice") as string) || undefined;
         payload.productImage = (fd.get("productImage") as string) || undefined;
         payload.selectedSize = (fd.get("selectedSize") as string) || undefined;
+        payload.selectedColor = (fd.get("selectedColor") as string) || undefined;
         payload.quantity = fd.get("quantity") ? parseInt(String(fd.get("quantity")), 10) : undefined;
         payload.shopSlug = (fd.get("shopSlug") as string) || undefined;
         payload.productSlug = (fd.get("productSlug") as string) || undefined;
@@ -255,19 +258,36 @@ function ContactFormInner() {
                 </p>
               )}
 
+              {/* Chosen color */}
+              {productColor && (
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="text-xs font-medium text-softBlack-600">
+                    {t("color")}:
+                  </span>
+                  <span
+                    className="inline-block w-4 h-4 rounded-full border border-beige-300 flex-shrink-0"
+                    style={{
+                      backgroundColor: COLOR_HEX_MAP[productColor] ?? "#9ca3af",
+                    }}
+                    aria-hidden
+                  />
+                  <span className="text-sm text-softBlack-800">{productColor}</span>
+                </div>
+              )}
+
               {/* Size selector */}
               {productSizes.length > 0 && (
                 <div className="mt-2">
                   <label className="text-xs font-medium text-softBlack-600">
                     {t("size")}
                   </label>
-                  <div className="flex flex-wrap gap-1.5 mt-1">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-1">
                     {productSizes.map((size) => (
                       <button
                         key={size}
                         type="button"
                         onClick={() => setSelectedSize(size)}
-                        className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+                        className={`min-h-[2.25rem] px-3 py-1.5 sm:py-2 text-xs rounded-full border transition-colors ${
                           selectedSize === size
                             ? "bg-softBlack-900 text-white border-softBlack-900"
                             : "border-beige-300 text-softBlack-600 hover:border-gold-500"
@@ -667,6 +687,7 @@ function ContactFormInner() {
             <input type="hidden" name="productPrice" value={productPrice || ""} />
             <input type="hidden" name="productImage" value={productImage || ""} />
             <input type="hidden" name="selectedSize" value={selectedSize} />
+            <input type="hidden" name="selectedColor" value={productColor} />
             <input type="hidden" name="quantity" value={String(quantity)} />
             <input type="hidden" name="shopSlug" value={shopSlug} />
             <input type="hidden" name="productSlug" value={productSlug} />

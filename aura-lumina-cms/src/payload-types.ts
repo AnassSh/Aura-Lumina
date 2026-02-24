@@ -76,6 +76,9 @@ export interface Config {
     partners: Partner;
     shops: Shop;
     products: Product;
+    lookbooks: Lookbook;
+    'lookbook-products': LookbookProduct;
+    'beauty-products': BeautyProduct;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -102,6 +105,9 @@ export interface Config {
     partners: PartnersSelect<false> | PartnersSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    lookbooks: LookbooksSelect<false> | LookbooksSelect<true>;
+    'lookbook-products': LookbookProductsSelect<false> | LookbookProductsSelect<true>;
+    'beauty-products': BeautyProductsSelect<false> | BeautyProductsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -807,6 +813,7 @@ export interface Order {
   productPrice?: string | null;
   productImage?: string | null;
   selectedSize?: string | null;
+  selectedColor?: string | null;
   quantity?: number | null;
   shopSlug?: string | null;
   productSlug?: string | null;
@@ -964,6 +971,122 @@ export interface Product {
    * Shop this product belongs to
    */
   shop?: (number | null) | Shop;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Explore Lookbooks collections (e.g. Winter Elegance, Everyday Essentials)
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lookbooks".
+ */
+export interface Lookbook {
+  id: number;
+  /**
+   * Translation key for title (e.g. lb1Title)
+   */
+  titleKey: string;
+  /**
+   * Translation key for description (e.g. lb1Desc)
+   */
+  descKey: string;
+  /**
+   * URL slug (e.g. winter-elegance-2026)
+   */
+  slug: string;
+  image?: (number | null) | Media;
+  /**
+   * Fallback: static path e.g. /images/lookbook-1.svg
+   */
+  imageUrl?: string | null;
+  /**
+   * Display order (lower first)
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Products inside a lookbook collection
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lookbook-products".
+ */
+export interface LookbookProduct {
+  id: number;
+  /**
+   * Which lookbook collection this product belongs to
+   */
+  lookbook: number | Lookbook;
+  /**
+   * Product name or translation key
+   */
+  name: string;
+  /**
+   * e.g. 1,250 MAD
+   */
+  price: string;
+  image?: (number | null) | Media;
+  /**
+   * Fallback: e.g. /images/abaya-1.svg
+   */
+  imageUrl?: string | null;
+  /**
+   * e.g. S, M, L, XL
+   */
+  sizes?:
+    | {
+        size?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * e.g. Black, Navy
+   */
+  colors?:
+    | {
+        color?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  badge?: ('none' | 'new' | 'bestseller' | 'sale') | null;
+  /**
+   * Order within the lookbook
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Beauty page – Editor's Picks products
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "beauty-products".
+ */
+export interface BeautyProduct {
+  id: number;
+  name: string;
+  /**
+   * e.g. Pure Halal Beauty
+   */
+  brand: string;
+  /**
+   * e.g. $24
+   */
+  price: string;
+  image?: (number | null) | Media;
+  /**
+   * Fallback: e.g. /images/product-1.svg
+   */
+  imageUrl?: string | null;
+  /**
+   * Show in Editor's Picks section
+   */
+  featured?: boolean | null;
+  /**
+   * Display order (lower first)
+   */
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1192,6 +1315,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'products';
         value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'lookbooks';
+        value: number | Lookbook;
+      } | null)
+    | ({
+        relationTo: 'lookbook-products';
+        value: number | LookbookProduct;
+      } | null)
+    | ({
+        relationTo: 'beauty-products';
+        value: number | BeautyProduct;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1576,6 +1711,7 @@ export interface OrdersSelect<T extends boolean = true> {
   productPrice?: T;
   productImage?: T;
   selectedSize?: T;
+  selectedColor?: T;
   quantity?: T;
   shopSlug?: T;
   productSlug?: T;
@@ -1691,6 +1827,62 @@ export interface ProductsSelect<T extends boolean = true> {
   lookbookFeatured?: T;
   filterCategory?: T;
   shop?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lookbooks_select".
+ */
+export interface LookbooksSelect<T extends boolean = true> {
+  titleKey?: T;
+  descKey?: T;
+  slug?: T;
+  image?: T;
+  imageUrl?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lookbook-products_select".
+ */
+export interface LookbookProductsSelect<T extends boolean = true> {
+  lookbook?: T;
+  name?: T;
+  price?: T;
+  image?: T;
+  imageUrl?: T;
+  sizes?:
+    | T
+    | {
+        size?: T;
+        id?: T;
+      };
+  colors?:
+    | T
+    | {
+        color?: T;
+        id?: T;
+      };
+  badge?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "beauty-products_select".
+ */
+export interface BeautyProductsSelect<T extends boolean = true> {
+  name?: T;
+  brand?: T;
+  price?: T;
+  image?: T;
+  imageUrl?: T;
+  featured?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }

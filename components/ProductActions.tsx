@@ -90,14 +90,14 @@ export default function ProductActions({
             </span>
           )}
         </p>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {product.colors.map((color) => (
             <button
               key={color.name}
               type="button"
               title={color.name}
               onClick={() => setSelectedColor(color.name)}
-              className={`w-10 h-10 rounded-full border-2 transition-colors relative group ${
+              className={`min-w-[2.5rem] min-h-[2.5rem] w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 transition-colors relative group flex-shrink-0 ${
                 selectedColor === color.name
                   ? "border-gold-500 ring-2 ring-gold-200"
                   : "border-beige-200 hover:border-gold-500"
@@ -117,13 +117,13 @@ export default function ProductActions({
         <p className="text-sm font-medium text-softBlack-800 mb-3">
           {t("selectSize")}
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {product.sizes.map((size) => (
             <button
               key={size}
               type="button"
               onClick={() => setSelectedSize(size)}
-              className={`px-4 py-2 border rounded-full text-sm transition-colors ${
+              className={`min-h-[2.5rem] px-3 py-2 sm:px-4 border rounded-full text-xs sm:text-sm font-medium transition-colors ${
                 selectedSize === size
                   ? "bg-softBlack-900 text-white border-softBlack-900"
                   : "border-beige-200 text-softBlack-700 hover:border-gold-500"

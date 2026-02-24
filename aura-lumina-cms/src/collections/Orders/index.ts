@@ -1,11 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
+import { incomingApiOrAuthenticated } from '../../access/incomingApiOrAuthenticated'
 
 /**
  * Orders – product orders from the contact form.
  * Data structure matches OrderPayload from Aura-Lumina /api/contact.
- * n8n will POST to /api/orders with API key auth after receiving webhook.
+ * Main site POSTs here when PAYLOAD_INCOMING_API_KEY is set; or n8n can forward with API key.
  */
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -15,7 +16,7 @@ export const Orders: CollectionConfig = {
     description: 'Product orders submitted via the contact form',
   },
   access: {
-    create: authenticated, // n8n uses API key = authenticated
+    create: incomingApiOrAuthenticated,
     read: authenticated,
     update: authenticated,
     delete: authenticated,
@@ -34,6 +35,7 @@ export const Orders: CollectionConfig = {
     { name: 'productPrice', type: 'text' },
     { name: 'productImage', type: 'text' },
     { name: 'selectedSize', type: 'text' },
+    { name: 'selectedColor', type: 'text' },
     { name: 'quantity', type: 'number' },
     { name: 'shopSlug', type: 'text' },
     { name: 'productSlug', type: 'text' },

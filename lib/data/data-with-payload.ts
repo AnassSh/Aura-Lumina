@@ -4,14 +4,20 @@
  */
 
 import { isPayloadConfigured } from "@/lib/payload"
-import type { Abaya, Shop, ShopListing, ShopProductListing } from "./types"
+import type { Abaya, BeautyProduct, Lookbook, Shop, ShopListing, ShopProductListing } from "./types"
 import { getFeaturedAbayas, getLookbookFeaturedAbayas } from "./abayas"
 import { shops, getAllShopSlugs, getAllShopListings, getShopProductListings } from "./shops"
+import { getEditorsPicks } from "./beauty"
+import { getAllLookbooks } from "./lookbooks"
 import {
   getProductsFromPayload,
   getShopsFromPayload,
   getShopListingsFromPayload,
   getShopProductListingsFromPayload,
+  getProductDetailFromPayload,
+  getLookbooksFromPayload,
+  getLookbookProductsFromPayload,
+  getBeautyProductsFromPayload,
 } from "./payload-data"
 
 /** Featured abayas – from Payload or static */
@@ -60,4 +66,27 @@ export async function getShopProductListingsAsync(): Promise<ShopProductListing[
   if (!isPayloadConfigured()) return getShopProductListings()
   const payload = await getShopProductListingsFromPayload()
   return payload.length > 0 ? payload : getShopProductListings()
+}
+
+/** Product detail by shop + product slug – from Payload when not in static mock */
+export { getProductDetailFromPayload }
+
+/** Lookbooks (Explore Lookbooks) – from Payload or static */
+export async function getLookbooksAsync(): Promise<Lookbook[]> {
+  if (!isPayloadConfigured()) return getAllLookbooks()
+  const payload = await getLookbooksFromPayload()
+  return payload.length > 0 ? payload : getAllLookbooks()
+}
+
+/** Products inside a lookbook collection – from Payload only (else empty) */
+export async function getLookbookProductsAsync(lookbookSlug: string): Promise<Abaya[]> {
+  if (!isPayloadConfigured()) return []
+  return getLookbookProductsFromPayload(lookbookSlug)
+}
+
+/** Editor's Picks (beauty) – from Payload or static */
+export async function getEditorsPicksAsync(): Promise<BeautyProduct[]> {
+  if (!isPayloadConfigured()) return getEditorsPicks()
+  const payload = await getBeautyProductsFromPayload()
+  return payload.length > 0 ? payload : getEditorsPicks()
 }

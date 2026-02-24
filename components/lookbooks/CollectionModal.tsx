@@ -4,10 +4,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import type { Lookbook } from "@/lib/data/types";
+import type { Abaya, Lookbook } from "@/lib/data/types";
 
 interface CollectionModalProps {
   lookbooks: Lookbook[];
+  collectionSlug: string | null;
+  collectionProducts: Abaya[];
   translations: Record<string, string>;
   colorToHex: Record<string, string>;
 }
@@ -54,12 +56,14 @@ const placeholderPrices = [
 
 export default function CollectionModal({
   lookbooks,
+  collectionSlug: collectionSlugProp,
+  collectionProducts,
   translations,
   colorToHex,
 }: CollectionModalProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const collectionSlug = searchParams.get("collection");
+  const collectionSlug = searchParams.get("collection") ?? collectionSlugProp;
 
   // Find the selected lookbook
   const selectedLookbook = useMemo(() => {
@@ -67,7 +71,7 @@ export default function CollectionModal({
     return lookbooks.find((lb) => lb.slug === collectionSlug) || null;
   }, [collectionSlug, lookbooks]);
 
-  // Generate placeholder products
+  // Placeholder products when no CMS data
   const placeholderProducts = useMemo(() => {
     if (!selectedLookbook) return [];
 
@@ -80,6 +84,23 @@ export default function CollectionModal({
       badge: i < 2 ? "new" : i === 3 ? "bestseller" : null,
     }));
   }, [selectedLookbook]);
+
+  // Use CMS products when available for this collection, else placeholders
+  const products = useMemo(() => {
+    if (!selectedLookbook || !collectionSlug || selectedLookbook.slug !== collectionSlug) return placeholderProducts;
+    if (collectionProducts.length > 0) {
+      return collectionProducts.map((p) => ({
+        id: p.id,
+        image: p.image,
+        price: p.price,
+        colors: p.colors ?? [],
+        sizes: p.sizes ?? [],
+        badge: p.badge ?? null,
+        name: p.titleKey,
+      }));
+    }
+    return placeholderProducts;
+  }, [selectedLookbook, collectionSlug, collectionProducts, placeholderProducts]);
 
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
 
@@ -153,8 +174,8 @@ export default function CollectionModal({
           {/* Products Grid */}
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {placeholderProducts.map((product, index) => {
-                const itemName = `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
+              {products.map((product, index) => {
+                const itemName = "name" in product ? (product as { name?: string }).name : `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
                 const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
                 const params = new URLSearchParams({
                   product: itemName,
@@ -195,16 +216,16 @@ export default function CollectionModal({
                         </h3>
                         {product.sizes && product.sizes.length > 0 && (
                           <div className="mb-2">
-                            <p className="text-[10px] font-medium text-softBlack-600 mb-1">
+                            <p className="text-[10px] sm:text-xs font-medium text-softBlack-600 mb-1">
                               {translations["selectSize"] || "Select Size"}
                             </p>
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1 sm:gap-1.5">
                               {product.sizes.map((size) => (
                                 <button
                                   key={size}
                                   type="button"
                                   onClick={() => setSize(product.id, size)}
-                                  className={`px-2 py-1 text-[10px] font-medium rounded-full border transition-colors ${
+                                  className={`min-h-[2rem] px-2 py-1 sm:px-2.5 sm:py-1.5 text-[10px] sm:text-xs font-medium rounded-full border transition-colors ${
                                     selectedSize === size
                                       ? "bg-softBlack-900 text-white border-softBlack-900"
                                       : "border-beige-200 text-softBlack-700 hover:border-gold-500"
@@ -216,16 +237,16 @@ export default function CollectionModal({
                             </div>
                           </div>
                         )}
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="text-sm font-semibold text-gold-600">
                             {product.price}
                           </span>
-                          <div className="flex items-center gap-1">
-                            {product.colors.map((color) => (
+                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            {(product.colors ?? []).map((color) => (
                               <span
                                 key={color}
                                 title={color}
-                                className="w-4 h-4 rounded-full border border-beige-200"
+                                className="min-w-[1rem] min-h-[1rem] w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-beige-200 flex-shrink-0"
                                 style={{
                                   backgroundColor: colorToHex[color] ?? "#ddd",
                                 }}
@@ -251,12 +272,14 @@ export default function CollectionModal({
               })}
             </div>
 
-            {/* Coming Soon Notice */}
-            <div className="mt-8 text-center p-6 bg-beige-50 rounded-2xl">
-              <p className="text-softBlack-500 italic">
-                {translations["comingSoon"] || "Full collection coming soon. These are placeholder items."}
-              </p>
-            </div>
+            {/* Coming Soon Notice – only when using placeholders */}
+            {products === placeholderProducts && placeholderProducts.length > 0 && (
+              <div className="mt-8 text-center p-6 bg-beige-50 rounded-2xl">
+                <p className="text-softBlack-500 italic">
+                  {translations["comingSoon"] || "Full collection coming soon. These are placeholder items."}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

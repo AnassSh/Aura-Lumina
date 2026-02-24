@@ -34,6 +34,7 @@ export interface OrderPayload extends ContactBasePayload {
   productPrice?: string;
   productImage?: string;
   selectedSize?: string;
+  selectedColor?: string;
   quantity?: number;
   shopSlug?: string;
   productSlug?: string;
@@ -107,6 +108,80 @@ function validateGeneral(body: unknown): body is GeneralPayload {
 }
 
 // -----------------------------------------------------------------------------
+// Optional: forward to Payload CMS (Orders / Partners panels)
+// Set PAYLOAD_API_URL and PAYLOAD_INCOMING_API_KEY on the main site.
+// -----------------------------------------------------------------------------
+
+async function createInPayload(formType: ContactFormType, payload: ContactPayload): Promise<void> {
+  const baseUrl = process.env.PAYLOAD_API_URL || process.env.NEXT_PUBLIC_PAYLOAD_API_URL;
+  const apiKey = process.env.PAYLOAD_INCOMING_API_KEY;
+  if (!baseUrl || !apiKey) return;
+
+  const path = formType === "order" ? "/orders" : formType === "partner" ? "/partners" : null;
+  if (!path) return;
+
+  const url = `${baseUrl.replace(/\/$/, "")}${path}`;
+  const body = formType === "order"
+    ? {
+        formType: (payload as OrderPayload).formType,
+        firstName: (payload as OrderPayload).firstName,
+        lastName: (payload as OrderPayload).lastName,
+        email: (payload as OrderPayload).email,
+        phone: (payload as OrderPayload).phone,
+        message: (payload as OrderPayload).message,
+        newsletter: (payload as OrderPayload).newsletter,
+        locale: (payload as OrderPayload).locale,
+        submittedAt: (payload as OrderPayload).submittedAt,
+        productName: (payload as OrderPayload).productName,
+        productPrice: (payload as OrderPayload).productPrice,
+        productImage: (payload as OrderPayload).productImage,
+        selectedSize: (payload as OrderPayload).selectedSize,
+        selectedColor: (payload as OrderPayload).selectedColor,
+        quantity: (payload as OrderPayload).quantity,
+        shopSlug: (payload as OrderPayload).shopSlug,
+        productSlug: (payload as OrderPayload).productSlug,
+        address: (payload as OrderPayload).address,
+        instagram: (payload as OrderPayload).instagram,
+        facebook: (payload as OrderPayload).facebook,
+      }
+    : {
+        formType: (payload as PartnerPayload).formType,
+        firstName: (payload as PartnerPayload).firstName,
+        lastName: (payload as PartnerPayload).lastName,
+        email: (payload as PartnerPayload).email,
+        message: (payload as PartnerPayload).message,
+        newsletter: (payload as PartnerPayload).newsletter,
+        locale: (payload as PartnerPayload).locale,
+        submittedAt: (payload as PartnerPayload).submittedAt,
+        shopName: (payload as PartnerPayload).shopName,
+        shopCity: (payload as PartnerPayload).shopCity,
+        shopNeighborhood: (payload as PartnerPayload).shopNeighborhood,
+        shopAddress: (payload as PartnerPayload).shopAddress,
+        shopPhone: (payload as PartnerPayload).shopPhone,
+        shopWhatsapp: (payload as PartnerPayload).shopWhatsapp,
+        shopInstagram: (payload as PartnerPayload).shopInstagram,
+        shopWebsite: (payload as PartnerPayload).shopWebsite,
+        shopDescription: (payload as PartnerPayload).shopDescription,
+      };
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      console.error("[contact API] Payload create failed:", res.status, await res.text());
+    }
+  } catch (err) {
+    console.error("[contact API] Payload create error:", err);
+  }
+}
+
+// -----------------------------------------------------------------------------
 // Optional n8n webhook forward (set env in Vercel / .env.local)
 // -----------------------------------------------------------------------------
 
@@ -177,6 +252,7 @@ export async function POST(request: NextRequest) {
         productPrice: body.productPrice != null ? String(body.productPrice) : undefined,
         productImage: body.productImage != null ? String(body.productImage) : undefined,
         selectedSize: body.selectedSize != null ? String(body.selectedSize) : undefined,
+        selectedColor: body.selectedColor != null ? String(body.selectedColor) : undefined,
         quantity: body.quantity != null ? Number(body.quantity) : undefined,
         shopSlug: body.shopSlug != null ? String(body.shopSlug) : undefined,
         productSlug: body.productSlug != null ? String(body.productSlug) : undefined,
@@ -215,10 +291,13 @@ export async function POST(request: NextRequest) {
       payload = { ...base, formType: "general" };
     }
 
+    // Create in Payload CMS so orders/partners appear in admin panel
+    await createInPayload(formType, payload);
+
     // Optional: forward to n8n for WhatsApp / CRM automation
     await forwardToN8n(formType, payload);
 
-    // 201 + payload (you can later add Strapi create here or in n8n)
+    // 201
     return NextResponse.json(
       { success: true, formType: payload.formType, submittedAt: payload.submittedAt },
       { status: 201 }

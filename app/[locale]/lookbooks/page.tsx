@@ -3,9 +3,12 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+
 // Import from centralized data layer
 import {
-  getAllLookbooks,
+  getLookbooksAsync,
+  getLookbookProductsAsync,
   getLookbookFeaturedAbayasAsync,
   lookbookCategories,
   COLOR_HEX_MAP,
@@ -27,13 +30,23 @@ export async function generateMetadata({
   };
 }
 
-// Get data from centralized data layer
-const lookbooksConfig = getAllLookbooks();
 const categoryKeys = lookbookCategories;
 const colorToHex = COLOR_HEX_MAP;
 
-export default async function LookbooksPage() {
-  const featuredProductsConfig = await getLookbookFeaturedAbayasAsync();
+export default async function LookbooksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ collection?: string }>;
+}) {
+  const resolvedParams = await searchParams;
+  const collectionSlug = resolvedParams?.collection ?? null;
+
+  const [lookbooksConfig, featuredProductsConfig, collectionProducts] = await Promise.all([
+    getLookbooksAsync(),
+    getLookbookFeaturedAbayasAsync(),
+    collectionSlug ? getLookbookProductsAsync(collectionSlug) : Promise.resolve([]),
+  ]);
+
   const t = await getTranslations("lookbooks");
   const tProduct = await getTranslations("product");
 
@@ -200,6 +213,8 @@ export default async function LookbooksPage() {
       {/* Collection Modal - shows when ?collection=slug is in URL */}
       <CollectionModal
         lookbooks={lookbooksConfig}
+        collectionSlug={collectionSlug}
+        collectionProducts={collectionProducts}
         translations={translations}
         colorToHex={colorToHex}
       />

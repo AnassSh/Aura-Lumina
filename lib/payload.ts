@@ -91,6 +91,40 @@ export interface PayloadDocsResponse<T> {
   page: number
 }
 
+export interface PayloadLookbook {
+  id: string
+  slug: string
+  titleKey: string
+  descKey: string
+  image?: { url?: string } | number | null
+  imageUrl?: string | null
+  order?: number
+}
+
+export interface PayloadLookbookProduct {
+  id: string
+  lookbook?: { slug?: string } | number | null
+  name: string
+  price: string
+  image?: { url?: string } | number | null
+  imageUrl?: string | null
+  sizes?: Array<{ size?: string }>
+  colors?: Array<{ color?: string }>
+  badge?: "none" | "new" | "bestseller" | "sale" | null
+  order?: number
+}
+
+export interface PayloadBeautyProduct {
+  id: string
+  name: string
+  brand: string
+  price: string
+  image?: { url?: string } | number | null
+  imageUrl?: string | null
+  featured?: boolean
+  order?: number
+}
+
 /** Fetch all products */
 export async function fetchProducts(): Promise<PayloadProduct[]> {
   const data = await fetchPayload<PayloadDocsResponse<PayloadProduct>>("/products?limit=100")
@@ -100,5 +134,42 @@ export async function fetchProducts(): Promise<PayloadProduct[]> {
 /** Fetch all shops */
 export async function fetchShops(): Promise<PayloadShop[]> {
   const data = await fetchPayload<PayloadDocsResponse<PayloadShop>>("/shops?limit=100")
+  return data.docs || []
+}
+
+/** Fetch all lookbooks (Explore Lookbooks collections) */
+export async function fetchLookbooks(): Promise<PayloadLookbook[]> {
+  const data = await fetchPayload<PayloadDocsResponse<PayloadLookbook>>("/lookbooks?limit=50&sort=order")
+  return data.docs || []
+}
+
+/** Fetch lookbook products for a collection by slug */
+export async function fetchLookbookProducts(lookbookSlug: string): Promise<PayloadLookbookProduct[]> {
+  try {
+    const lookbooks = await fetchLookbooks()
+    const lookbook = lookbooks.find((lb) => lb.slug === lookbookSlug)
+    if (!lookbook) return []
+    const data = await fetchPayload<PayloadDocsResponse<PayloadLookbookProduct>>(
+      `/lookbook-products?where[lookbook][equals]=${encodeURIComponent(lookbook.id)}&limit=50&sort=order&depth=1`
+    )
+    return data.docs || []
+  } catch {
+    return []
+  }
+}
+
+/** Fetch beauty products (Editor's Picks – featured only) */
+export async function fetchBeautyProducts(): Promise<PayloadBeautyProduct[]> {
+  const data = await fetchPayload<PayloadDocsResponse<PayloadBeautyProduct>>(
+    "/beauty-products?where[featured][equals]=true&limit=50&sort=order"
+  )
+  return data.docs || []
+}
+
+/** Fetch all lookbook products (for counting per collection) */
+export async function fetchAllLookbookProducts(): Promise<PayloadLookbookProduct[]> {
+  const data = await fetchPayload<PayloadDocsResponse<PayloadLookbookProduct>>(
+    "/lookbook-products?limit=500&depth=1"
+  )
   return data.docs || []
 }

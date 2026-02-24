@@ -1,11 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
+import { incomingApiOrAuthenticated } from '../../access/incomingApiOrAuthenticated'
 
 /**
  * Partners – shop partnership applications from the contact form.
  * Data structure matches PartnerPayload from Aura-Lumina /api/contact.
- * n8n will POST to /api/partners with API key auth after receiving webhook.
+ * Main site POSTs here when PAYLOAD_INCOMING_API_KEY is set; or n8n can forward with API key.
  */
 export const Partners: CollectionConfig = {
   slug: 'partners',
@@ -15,7 +16,7 @@ export const Partners: CollectionConfig = {
     description: 'Shop partnership applications submitted via the contact form',
   },
   access: {
-    create: authenticated, // n8n uses API key = authenticated
+    create: incomingApiOrAuthenticated,
     read: authenticated,
     update: authenticated,
     delete: authenticated,
