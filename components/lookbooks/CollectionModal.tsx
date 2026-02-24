@@ -176,6 +176,7 @@ export default function CollectionModal({
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((product, index) => {
                 const itemName = "name" in product ? (product as { name?: string }).name : `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
+                const altText: string = itemName ?? "";
                 const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
                 const params = new URLSearchParams({
                   product: String(itemName ?? ""),
@@ -192,7 +193,7 @@ export default function CollectionModal({
                       <div className="relative aspect-[3/4] overflow-hidden">
                         <Image
                           src={product.image}
-                          alt={itemName}
+                          alt={altText}
                           fill
                           sizes="(max-width: 768px) 50vw, 33vw"
                           loading="lazy"
