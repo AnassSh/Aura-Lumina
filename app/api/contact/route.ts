@@ -215,9 +215,6 @@ export async function POST(request: NextRequest) {
       payload = { ...base, formType: "general" };
     }
 
-    // Log submission in terminal (dev/debugging – remove or guard in production if desired)
-    console.log("[contact API] Submission received:", JSON.stringify(payload, null, 2));
-
     // Optional: forward to n8n for WhatsApp / CRM automation
     await forwardToN8n(formType, payload);
 
