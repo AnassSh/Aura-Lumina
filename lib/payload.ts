@@ -28,7 +28,7 @@ async function fetchPayload<T>(path: string, depth = 2): Promise<T> {
   const url = `${API_URL}${path}${path.includes("?") ? "&" : "?"}depth=${depth}`
   const res = await fetch(url, {
     headers: { "Content-Type": "application/json" },
-    next: { revalidate: 60 },
+    next: { revalidate: 0 },
   })
   if (!res.ok) throw new Error(`Payload fetch failed: ${res.status} ${res.statusText}`)
   return res.json()
