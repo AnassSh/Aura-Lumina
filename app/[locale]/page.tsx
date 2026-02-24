@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+
+export const dynamic = "force-dynamic";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import SectionHeader from "@/components/ui/SectionHeader";
