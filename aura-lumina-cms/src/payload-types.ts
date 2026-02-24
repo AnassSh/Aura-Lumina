@@ -883,6 +883,10 @@ export interface Shop {
    * Hero / main shop image
    */
   image?: (number | null) | Media;
+  /**
+   * Fallback: static path when no upload (e.g. /images/shop-hero-1.svg)
+   */
+  imageUrl?: string | null;
   gallery?:
     | {
         image: number | Media;
@@ -1634,6 +1638,7 @@ export interface ShopsSelect<T extends boolean = true> {
   story?: T;
   established?: T;
   image?: T;
+  imageUrl?: T;
   gallery?:
     | T
     | {

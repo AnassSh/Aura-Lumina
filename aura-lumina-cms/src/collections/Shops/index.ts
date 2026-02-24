@@ -51,6 +51,13 @@ export const Shops: CollectionConfig = {
       admin: { description: 'Hero / main shop image' },
     },
     {
+      name: 'imageUrl',
+      type: 'text',
+      admin: {
+        description: 'Fallback: static path when no upload (e.g. /images/shop-hero-1.svg)',
+      },
+    },
+    {
       name: 'gallery',
       type: 'array',
       fields: [

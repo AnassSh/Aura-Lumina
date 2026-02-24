@@ -34,9 +34,9 @@ function mapPayloadProductToAbaya(p: PayloadProduct): Abaya {
 }
 
 function mapPayloadShopToShop(s: PayloadShop): Shop {
-  const shop = s as PayloadShop & { featuredProducts?: Array<PayloadProduct | { id: string }> }
+  const shop = s as PayloadShop & { featuredProducts?: Array<PayloadProduct | { id: string }>; imageUrl?: string }
   const image =
-    typeof shop.image === "object" && shop.image ? getMediaUrl(shop.image as { url?: string }) : ""
+    typeof shop.image === "object" && shop.image ? getMediaUrl(shop.image as { url?: string }) : shop.imageUrl || ""
   const gallery =
     (shop.gallery || [])
       .map((g) => (typeof g.image === "object" && g.image ? getMediaUrl(g.image as { url?: string }) : ""))
@@ -71,7 +71,7 @@ function mapPayloadShopToShop(s: PayloadShop): Shop {
     },
     story: shop.story || "",
     established: shop.established || "",
-    image: image || "/images/shop-hero-1.svg",
+    image: image || shop.imageUrl || "/images/shop-hero-1.svg",
     gallery: gallery.length ? gallery : ["/images/shop-gallery-1.svg"],
     specialties: (shop.specialties || []).map((s) => s.label).filter(Boolean) as string[],
     featuredProducts,
@@ -84,14 +84,16 @@ function mapPayloadShopToShop(s: PayloadShop): Shop {
 }
 
 function mapPayloadShopToShopListing(s: PayloadShop): ShopListing {
+  const shopWithUrl = s as PayloadShop & { imageUrl?: string }
+  const image =
+    typeof s.image === "object" && s.image ? getMediaUrl(s.image as { url?: string }) : shopWithUrl.imageUrl || ""
   return {
     slug: s.slug,
     name: s.name,
     tagline: s.tagline || "",
     city: s.location?.city || "",
     neighborhood: s.location?.neighborhood || "",
-    image:
-      typeof s.image === "object" && s.image ? getMediaUrl(s.image as { url?: string }) : "",
+    image: image || "/images/shop-hero-1.svg",
     specialties: (s.specialties || []).map((sp) => sp.label).filter(Boolean) as string[],
     established: s.established || "",
   }

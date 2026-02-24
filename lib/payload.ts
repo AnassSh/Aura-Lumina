@@ -71,6 +71,7 @@ export interface PayloadShop {
   story?: string | null
   established?: string | null
   image?: { url?: string } | number | null
+  imageUrl?: string | null
   gallery?: Array<{ image?: { url?: string } | number }>
   specialties?: Array<{ label?: string }>
   featuredProducts?: Array<PayloadProduct | number>
