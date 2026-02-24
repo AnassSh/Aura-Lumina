@@ -178,10 +178,10 @@ export default function CollectionModal({
                 const itemName = "name" in product ? (product as { name?: string }).name : `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
                 const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
                 const params = new URLSearchParams({
-                  product: itemName,
-                  price: product.price,
-                  image: product.image,
-                });
+                  product: String(itemName ?? ""),
+                  price: String(product.price ?? ""),
+                  image: String(product.image ?? ""),
+                } as Record<string, string>);
                 if (selectedSize) params.set("size", selectedSize);
                 if (product.sizes?.length) params.set("sizes", product.sizes.join(","));
                 const buyNowHref = `/contact?${params.toString()}`;
