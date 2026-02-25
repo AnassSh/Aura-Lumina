@@ -33,6 +33,12 @@ export async function generateMetadata({
 export default async function HomePage() {
   const t = await getTranslations("home");
 
+  // When titleKey has no translation (e.g. Payload product name), show it as literal text instead of "home.Product Name"
+  const displayFeaturedTitle = (key: string) => {
+    const translated = t(key);
+    return translated === key || translated.startsWith("home.") ? key : translated;
+  };
+
   // Data from Payload CMS or static fallback
   const [featuredAbayas, shopProducts, editorsPicksRaw] = await Promise.all([
     getFeaturedAbayasAsync(),
@@ -127,7 +133,7 @@ export default async function HomePage() {
             {featuredAbayas.map((abaya) => (
               <ProductCard
                 key={abaya.id}
-                title={t(abaya.titleKey)}
+                title={displayFeaturedTitle(abaya.titleKey)}
                 price={abaya.price}
                 image={abaya.image}
                 href={abaya.href || "/lookbooks"}

@@ -3,9 +3,9 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import ProductActions from "@/components/ProductActions";
-import { getProductDetailFromPayload } from "@/lib/data";
+import { getProductDetailFromPayload, getShopProductListingsAsync } from "@/lib/data";
 
-// Types
+// Types (aligned with Payload mapping)
 interface Product {
   slug: string;
   name: string;
@@ -30,273 +30,42 @@ interface Shop {
   instagram?: string;
 }
 
-// Mock data - Products organized by shop
-const shopProducts: Record<string, { shop: Shop; products: Record<string, Product> }> = {
-  "dar-el-yasmine": {
-    shop: {
-      slug: "dar-el-yasmine",
-      name: "Dar El Yasmine",
-      city: "Casablanca",
-      neighborhood: "Maarif",
-      phone: "+212 522 123 456",
-      whatsapp: "+212661234567",
-      instagram: "darelysamine_casa",
-    },
-    products: {
-      "jasmine-embroidered-abaya": {
-        slug: "jasmine-embroidered-abaya",
-        name: "Jasmine Embroidered Abaya",
-        price: "1,850 MAD",
-        description:
-          "A stunning handcrafted abaya featuring delicate jasmine-inspired embroidery along the sleeves and neckline. Made from premium crepe fabric, this piece combines traditional Moroccan craftsmanship with contemporary elegance.",
-        details: [
-          "Hand-embroidered jasmine motifs",
-          "Premium Korean crepe fabric",
-          "Hidden snap buttons at front",
-          "Matching belt included",
-          "Loose, flowing silhouette",
-        ],
-        images: [
-          "/images/abaya-1.svg",
-          "/images/product-detail-1.svg",
-          "/images/product-detail-2.svg",
-        ],
-        colors: [
-          { name: "Black", hex: "#1a1a1a" },
-          { name: "Navy", hex: "#1e3a5f" },
-          { name: "Burgundy", hex: "#722f37" },
-        ],
-        sizes: ["S", "M", "L", "XL", "XXL"],
-        category: "Embroidered Abayas",
-        fabric: "Premium Korean Crepe",
-        care: [
-          "Dry clean recommended",
-          "Iron on low heat",
-          "Store on padded hanger",
-        ],
-      },
-      "pearl-silk-abaya": {
-        slug: "pearl-silk-abaya",
-        name: "Pearl Silk Abaya",
-        price: "2,200 MAD",
-        description:
-          "Luxurious silk abaya adorned with genuine freshwater pearl details. Perfect for special occasions, weddings, and Eid celebrations. The subtle sheen of the silk catches light beautifully.",
-        details: [
-          "Genuine freshwater pearl accents",
-          "100% mulberry silk",
-          "Concealed zipper closure",
-          "Silk lining for comfort",
-          "A-line silhouette",
-        ],
-        images: [
-          "/images/abaya-2.svg",
-          "/images/product-detail-3.svg",
-          "/images/product-detail-4.svg",
-        ],
-        colors: [
-          { name: "Champagne", hex: "#f7e7ce" },
-          { name: "Dusty Rose", hex: "#dcae96" },
-          { name: "Ivory", hex: "#fffff0" },
-        ],
-        sizes: ["S", "M", "L", "XL"],
-        category: "Silk Abayas",
-        fabric: "100% Mulberry Silk",
-        care: [
-          "Professional dry clean only",
-          "Do not iron directly on pearls",
-          "Store in garment bag",
-        ],
-      },
-      "classic-black-gold-trim": {
-        slug: "classic-black-gold-trim",
-        name: "Classic Black with Gold Trim",
-        price: "1,650 MAD",
-        description:
-          "Timeless elegance meets everyday practicality. This classic black abaya features subtle gold trim along the edges, making it perfect for both daily wear and semi-formal occasions.",
-        details: [
-          "Gold metallic trim detailing",
-          "Wrinkle-resistant Nidha fabric",
-          "Front open design",
-          "Side pockets",
-          "Straight cut silhouette",
-        ],
-        images: [
-          "/images/abaya-3.svg",
-          "/images/product-detail-5.svg",
-          "/images/product-detail-6.svg",
-        ],
-        colors: [{ name: "Black", hex: "#1a1a1a" }],
-        sizes: ["S", "M", "L", "XL", "XXL", "3XL"],
-        category: "Classic Abayas",
-        fabric: "Premium Nidha",
-        care: [
-          "Machine washable on gentle",
-          "Tumble dry low",
-          "Iron on medium heat",
-        ],
-      },
-    },
-  },
-  "atelier-nour": {
-    shop: {
-      slug: "atelier-nour",
-      name: "Atelier Nour",
-      city: "Rabat",
-      neighborhood: "Agdal",
-      phone: "+212 537 654 321",
-      whatsapp: "+212662345678",
-      instagram: "ateliernour_rabat",
-    },
-    products: {
-      "nour-collection-abaya": {
-        slug: "nour-collection-abaya",
-        name: "Nour Collection Abaya",
-        price: "1,450 MAD",
-        description:
-          "The signature piece from our Nour collection. Clean lines, minimal design, maximum impact. This contemporary abaya is designed for the modern woman who values simplicity and quality.",
-        details: [
-          "Minimalist clean design",
-          "Japanese crepe fabric",
-          "Invisible magnetic closures",
-          "Dropped shoulders",
-          "Relaxed fit",
-        ],
-        images: [
-          "/images/abaya-4.svg",
-          "/images/product-detail-7.svg",
-          "/images/product-detail-8.svg",
-        ],
-        colors: [
-          { name: "Charcoal", hex: "#36454f" },
-          { name: "Camel", hex: "#c19a6b" },
-          { name: "Olive", hex: "#808000" },
-        ],
-        sizes: ["XS", "S", "M", "L", "XL"],
-        category: "Contemporary Abayas",
-        fabric: "Japanese Crepe",
-        care: [
-          "Hand wash cold",
-          "Hang to dry",
-          "Steam instead of ironing",
-        ],
-      },
-      "minimalist-linen-abaya": {
-        slug: "minimalist-linen-abaya",
-        name: "Minimalist Linen Abaya",
-        price: "1,250 MAD",
-        description:
-          "Breathable, lightweight, and effortlessly chic. Our linen abaya is perfect for warm Moroccan days. The natural fabric keeps you cool while the relaxed silhouette ensures comfort all day.",
-        details: [
-          "100% European linen",
-          "Breathable and lightweight",
-          "Coconut shell buttons",
-          "Side slits for movement",
-          "Oversized fit",
-        ],
-        images: [
-          "/images/abaya-5.svg",
-          "/images/product-detail-9.svg",
-          "/images/product-detail-10.svg",
-        ],
-        colors: [
-          { name: "Natural", hex: "#f5f5dc" },
-          { name: "Sage", hex: "#9dc183" },
-          { name: "Terracotta", hex: "#e2725b" },
-        ],
-        sizes: ["One Size"],
-        category: "Linen Collection",
-        fabric: "100% European Linen",
-        care: [
-          "Machine wash cold",
-          "Tumble dry low",
-          "Iron while damp",
-          "Gets softer with each wash",
-        ],
-      },
-      "evening-velvet-abaya": {
-        slug: "evening-velvet-abaya",
-        name: "Evening Velvet Abaya",
-        price: "2,400 MAD",
-        description:
-          "Make an entrance with our luxurious velvet abaya. Rich, deep color and sumptuous texture create a dramatic effect perfect for evening events, weddings, and special celebrations.",
-        details: [
-          "Premium Italian velvet",
-          "Satin lining throughout",
-          "Bell sleeves",
-          "Crystal button details",
-          "Floor-length with train option",
-        ],
-        images: [
-          "/images/abaya-6.svg",
-          "/images/product-detail-11.svg",
-          "/images/product-detail-12.svg",
-        ],
-        colors: [
-          { name: "Emerald", hex: "#50c878" },
-          { name: "Ruby", hex: "#e0115f" },
-          { name: "Sapphire", hex: "#0f52ba" },
-        ],
-        sizes: ["S", "M", "L", "XL"],
-        category: "Evening Wear",
-        fabric: "Italian Velvet with Satin Lining",
-        care: [
-          "Professional dry clean only",
-          "Store flat or on padded hanger",
-          "Steam only, do not iron",
-        ],
-      },
-    },
-  },
-};
-
-// Generate static params for all products (per locale)
+// Static params from Payload (shop + product slugs)
 export async function generateStaticParams() {
-  const params: { locale: string; shopSlug: string; productSlug: string }[] = [];
-
-  routing.locales.forEach((locale) => {
-    Object.entries(shopProducts).forEach(([shopSlug, { products }]) => {
-      Object.keys(products).forEach((productSlug) => {
-        params.push({ locale, shopSlug, productSlug });
-      });
-    });
-  });
-
-  return params;
+  const listings = await getShopProductListingsAsync();
+  return routing.locales.flatMap((locale) =>
+    listings.map((l) => ({
+      locale,
+      shopSlug: l.shopSlug,
+      productSlug: l.productSlug,
+    }))
+  );
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; shopSlug: string; productSlug: string }>;
 }): Promise<Metadata> {
   const { shopSlug, productSlug } = await params;
-  const shopData = shopProducts[shopSlug];
-  let product = shopData?.products[productSlug];
-  let shop = shopData?.shop;
-  if (!product || !shop) {
-    const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
-    if (payloadDetail) {
-      product = payloadDetail.product;
-      shop = payloadDetail.shop as Shop;
-    }
-  }
-  if (!shop) return { title: "Shop Not Found" };
-  if (!product) return { title: "Product Not Found" };
+  const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
+  if (!payloadDetail) return { title: "Product Not Found" };
+  const { product, shop } = payloadDetail;
+  const shopTyped = shop as Shop;
 
   const description = product.description
-    ? `${product.description.slice(0, 150)}... Available at ${shop.name} in ${shop.neighborhood}, ${shop.city}. ${product.price}.`
-    : `${product.name} - ${product.price}. Available at ${shop.name} in ${shop.city}.`;
+    ? `${product.description.slice(0, 150)}... Available at ${shopTyped.name} in ${shopTyped.neighborhood}, ${shopTyped.city}. ${product.price}.`
+    : `${product.name} - ${product.price}. Available at ${shopTyped.name} in ${shopTyped.city}.`;
   return {
-    title: `${product.name} | ${shop.name} - ${shop.city}`,
+    title: `${product.name} | ${shopTyped.name} - ${shopTyped.city}`,
     description,
     keywords: [
       product.name,
       product.category,
       "abaya",
       "modest fashion",
-      shop.city,
-      shop.name,
+      shopTyped.city,
+      shopTyped.name,
       product.fabric,
     ],
     openGraph: {
@@ -314,19 +83,9 @@ export default async function ProductPage({
   params: Promise<{ locale: string; shopSlug: string; productSlug: string }>;
 }) {
   const { shopSlug, productSlug } = await params;
-  const shopData = shopProducts[shopSlug];
-
-  let shop: Shop | undefined = shopData?.shop;
-  let product: Product | undefined = shopData?.products[productSlug];
-
-  // If not in mock, try Payload CMS (shops that exist only in CMS were showing "Shop Not Found" before)
-  if (!shop || !product) {
-    const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
-    if (payloadDetail) {
-      product = payloadDetail.product;
-      shop = payloadDetail.shop as Shop;
-    }
-  }
+  const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
+  const shop = payloadDetail?.shop as Shop | undefined;
+  const product = payloadDetail?.product as Product | undefined;
 
   if (!shop) {
     return (
@@ -358,10 +117,8 @@ export default async function ProductPage({
     );
   }
 
-  // Get other products from same shop (mock only; Payload-sourced product has no list here)
-  const otherProducts = shopData && product === shopData.products[productSlug]
-    ? Object.values(shopData.products).filter((p) => p.slug !== product.slug).slice(0, 3)
-    : [];
+  // Payload does not expose "other products from same shop" in one call; section hidden for Payload-sourced products
+  const otherProducts: Product[] = [];
 
   return (
     <div className="pt-24 pb-20">
