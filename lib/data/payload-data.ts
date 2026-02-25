@@ -142,7 +142,7 @@ export async function getShopListingsFromPayload(): Promise<ShopListing[]> {
   }
 }
 
-/** Build shop product listings from Payload (for home page) */
+/** Build shop product listings from Payload (for home page "From our partner shops" only – exclude lookbook-featured products so they show only in lookbooks) */
 export async function getShopProductListingsFromPayload(): Promise<ShopProductListing[]> {
   if (!isPayloadConfigured()) return []
   try {
@@ -151,8 +151,10 @@ export async function getShopProductListingsFromPayload(): Promise<ShopProductLi
     const listings: ShopProductListing[] = []
     let id = 1
     for (const p of products) {
+      if (p.lookbookFeatured === true) continue
       const shopSlug = typeof p.shop === "object" && p.shop ? (p.shop as { slug?: string }).slug : null
       const shop = shopSlug ? shopMap[shopSlug] : null
+      if (!shopSlug || !shop) continue
       const image =
         typeof p.image === "object" && p.image ? getMediaUrl(p.image as { url?: string }) : p.imageUrl || ""
       listings.push({
@@ -160,8 +162,8 @@ export async function getShopProductListingsFromPayload(): Promise<ShopProductLi
         name: p.name,
         price: p.price,
         image: image || "/images/abaya-1.svg",
-        shopName: shop?.name || "",
-        shopSlug: shopSlug || "",
+        shopName: shop.name || "",
+        shopSlug: shopSlug,
         productSlug: p.slug,
         city: shop?.location?.city || "",
       })
