@@ -274,14 +274,14 @@ export async function generateMetadata({
   const shopData = shopProducts[shopSlug];
   let product = shopData?.products[productSlug];
   let shop = shopData?.shop;
-  if (!product) {
+  if (!product || !shop) {
     const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
     if (payloadDetail) {
       product = payloadDetail.product;
-      shop = payloadDetail.shop;
+      shop = payloadDetail.shop as Shop;
     }
   }
-  if (!shopData && !shop) return { title: "Product Not Found" };
+  if (!shop) return { title: "Shop Not Found" };
   if (!product) return { title: "Product Not Found" };
 
   const description = product.description
@@ -316,7 +316,19 @@ export default async function ProductPage({
   const { shopSlug, productSlug } = await params;
   const shopData = shopProducts[shopSlug];
 
-  if (!shopData) {
+  let shop: Shop | undefined = shopData?.shop;
+  let product: Product | undefined = shopData?.products[productSlug];
+
+  // If not in mock, try Payload CMS (shops that exist only in CMS were showing "Shop Not Found" before)
+  if (!shop || !product) {
+    const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
+    if (payloadDetail) {
+      product = payloadDetail.product;
+      shop = payloadDetail.shop as Shop;
+    }
+  }
+
+  if (!shop) {
     return (
       <div className="pt-32 pb-20 text-center">
         <div className="container-custom">
@@ -329,18 +341,6 @@ export default async function ProductPage({
         </div>
       </div>
     );
-  }
-
-  let shop = shopData.shop;
-  let product = shopData.products[productSlug];
-
-  // If not in mock, try Payload CMS (colors will have hex for circles)
-  if (!product) {
-    const payloadDetail = await getProductDetailFromPayload(shopSlug, productSlug);
-    if (payloadDetail) {
-      product = payloadDetail.product;
-      shop = payloadDetail.shop;
-    }
   }
 
   if (!product) {
@@ -359,7 +359,7 @@ export default async function ProductPage({
   }
 
   // Get other products from same shop (mock only; Payload-sourced product has no list here)
-  const otherProducts = product === shopData.products[productSlug]
+  const otherProducts = shopData && product === shopData.products[productSlug]
     ? Object.values(shopData.products).filter((p) => p.slug !== product.slug).slice(0, 3)
     : [];
 
