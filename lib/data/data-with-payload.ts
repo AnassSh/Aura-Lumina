@@ -19,7 +19,6 @@ import {
   getLookbookProductsFromPayload,
   getBeautyProductsFromPayload,
 } from "./payload-data"
-import type { ShopListing } from "./types"
 
 /** Featured abayas – from Payload or static */
 export async function getFeaturedAbayasAsync(): Promise<Abaya[]> {
