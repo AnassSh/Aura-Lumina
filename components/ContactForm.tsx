@@ -266,71 +266,74 @@ function ContactFormInner() {
                 </p>
               )}
 
-              {/* Chosen color – displayed when client selected a color on the product page */}
-              {selectedColor && (
-                <div className="mt-2 flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-medium text-softBlack-600">
-                    {t("color")}:
-                  </span>
-                  <span
-                    className="inline-block w-5 h-5 sm:w-5 sm:h-5 rounded-full border-2 border-beige-300 flex-shrink-0"
-                    style={{
-                      backgroundColor: COLOR_HEX_MAP[selectedColor] ?? "#9ca3af",
-                    }}
-                    aria-hidden
-                  />
-                  <span className="text-sm text-softBlack-800">{selectedColor}</span>
-                </div>
-              )}
-
-              {/* Size selector – responsive, touch-friendly buttons */}
-              {productSizes.length > 0 && (
-                <div className="mt-2">
-                  <label className="text-xs font-medium text-softBlack-600">
-                    {t("size")}
-                  </label>
-                  <div className="flex flex-wrap gap-2 sm:gap-2.5 mt-1.5">
-                    {productSizes.map((size) => (
-                      <button
-                        key={size}
-                        type="button"
-                        onClick={() => setSelectedSize(size)}
-                        className={`min-h-[2.5rem] sm:min-h-[2.75rem] min-w-[2.5rem] px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-full border-2 transition-colors touch-manipulation ${
-                          selectedSize === size
-                            ? "bg-softBlack-900 text-white border-softBlack-900"
-                            : "border-beige-300 text-softBlack-600 hover:border-gold-500 active:border-gold-500"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+              {/* Color, Size, Quantity – visible in one row, compact */}
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-x-6">
+                {/* Color – visible next to size and quantity */}
+                {selectedColor && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-medium text-softBlack-600">
+                      {t("color")}:
+                    </span>
+                    <span
+                      className="inline-block w-4 h-4 rounded-full border border-beige-300 flex-shrink-0"
+                      style={{
+                        backgroundColor: COLOR_HEX_MAP[selectedColor] ?? "#9ca3af",
+                      }}
+                      aria-hidden
+                    />
+                    <span className="text-xs text-softBlack-800">{selectedColor}</span>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Quantity – responsive, touch-friendly */}
-              <div className="mt-2 flex items-center gap-2 flex-wrap">
-                <label className="text-xs font-medium text-softBlack-600">
-                  {t("quantity")}
-                </label>
-                <div className="flex items-center border-2 border-beige-200 rounded-xl overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="min-h-[2.5rem] min-w-[2.5rem] sm:min-h-[2.75rem] sm:min-w-[2.75rem] px-2.5 py-1.5 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-100 active:bg-beige-200 transition-colors touch-manipulation"
-                  >
-                    −
-                  </button>
-                  <span className="px-3 py-1.5 text-sm font-medium min-w-[2.5rem] text-center border-x border-beige-200">
-                    {quantity}
+                {/* Size – smaller buttons */}
+                {productSizes.length > 0 && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-medium text-softBlack-600">
+                      {t("size")}:
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {productSizes.map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => setSelectedSize(size)}
+                          className={`min-h-[1.75rem] px-2.5 py-1 text-xs rounded-full border transition-colors touch-manipulation ${
+                            selectedSize === size
+                              ? "bg-softBlack-900 text-white border-softBlack-900"
+                              : "border-beige-300 text-softBlack-600 hover:border-gold-500 active:border-gold-500"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Quantity – compact stepper */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-medium text-softBlack-600">
+                    {t("quantity")}:
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="min-h-[2.5rem] min-w-[2.5rem] sm:min-h-[2.75rem] sm:min-w-[2.75rem] px-2.5 py-1.5 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-100 active:bg-beige-200 transition-colors touch-manipulation"
-                  >
-                    +
-                  </button>
+                  <div className="flex items-center border border-beige-200 rounded-lg overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="min-h-[1.75rem] min-w-[1.75rem] px-1.5 py-0.5 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-100 active:bg-beige-200 transition-colors touch-manipulation text-sm"
+                    >
+                      −
+                    </button>
+                    <span className="px-2 py-0.5 text-xs font-medium min-w-[1.5rem] text-center border-x border-beige-200">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="min-h-[1.75rem] min-w-[1.75rem] px-1.5 py-0.5 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-100 active:bg-beige-200 transition-colors touch-manipulation text-sm"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
