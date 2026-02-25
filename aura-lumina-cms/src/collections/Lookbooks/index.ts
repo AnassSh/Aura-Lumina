@@ -20,13 +20,17 @@ export const Lookbooks: CollectionConfig = {
       name: 'titleKey',
       type: 'text',
       required: true,
-      admin: { description: 'Translation key for title (e.g. lb1Title)' },
+      admin: {
+        description: 'Either a translation key (e.g. lb1Title) from your locale files, or the exact title text to show (e.g. Abaya Collection for Aeid). Use a key if you need the title translated per language.',
+      },
     },
     {
       name: 'descKey',
       type: 'text',
       required: true,
-      admin: { description: 'Translation key for description (e.g. lb1Desc)' },
+      admin: {
+        description: 'Either a translation key (e.g. lb1Desc) from your locale files, or the exact description text to show. Use a key if you need the description translated per language.',
+      },
     },
     {
       name: 'slug',

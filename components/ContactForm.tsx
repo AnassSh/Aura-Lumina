@@ -37,7 +37,7 @@ function ContactFormInner() {
   const initialQuantity = parseInt(searchParams.get("quantity") || "1", 10);
   const shopSlug = searchParams.get("shopSlug") || "";
   const productSlug = searchParams.get("productSlug") || "";
-  const productColor = searchParams.get("color") || "";
+  const productColorFromUrl = searchParams.get("color") || "";
   const inquiryParam = searchParams.get("inquiry");
 
   const hasProduct = !!productName;
@@ -51,6 +51,7 @@ function ContactFormInner() {
   const [shopPhone, setShopPhone] = useState("");
   const [shopWhatsapp, setShopWhatsapp] = useState("");
   const [selectedSize, setSelectedSize] = useState(initialSize);
+  const [selectedColor, setSelectedColor] = useState(productColorFromUrl);
   const [quantity, setQuantity] = useState(initialQuantity);
 
   const isClientForm = inquiryType === "inquiryClientForm";
@@ -64,7 +65,12 @@ function ContactFormInner() {
     if (inquiryParam === "partner") setInquiryType("inquiryPartnership");
   }, [inquiryParam]);
 
-  // Persist size/quantity in sessionStorage
+  // Sync selected color from URL when it changes (e.g. user navigates with new params)
+  useEffect(() => {
+    if (productColorFromUrl) setSelectedColor(productColorFromUrl);
+  }, [productColorFromUrl]);
+
+  // Restore size, color, quantity from sessionStorage when no URL params
   useEffect(() => {
     if (hasProduct && productSlug) {
       const key = `order_${productSlug}`;
@@ -73,23 +79,25 @@ function ContactFormInner() {
         try {
           const data = JSON.parse(stored);
           if (!initialSize && data.size) setSelectedSize(data.size);
+          if (!productColorFromUrl && data.color) setSelectedColor(data.color);
           if (data.quantity) setQuantity(data.quantity);
         } catch {
           // ignore
         }
       }
     }
-  }, [hasProduct, productSlug, initialSize]);
+  }, [hasProduct, productSlug, initialSize, productColorFromUrl]);
 
+  // Persist size, color, quantity to sessionStorage
   useEffect(() => {
     if (hasProduct && productSlug) {
       const key = `order_${productSlug}`;
       sessionStorage.setItem(
         key,
-        JSON.stringify({ size: selectedSize, quantity })
+        JSON.stringify({ size: selectedSize, quantity, color: selectedColor })
       );
     }
-  }, [selectedSize, quantity, hasProduct, productSlug]);
+  }, [selectedSize, selectedColor, quantity, hasProduct, productSlug]);
 
   const handlePhoneChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -258,39 +266,39 @@ function ContactFormInner() {
                 </p>
               )}
 
-              {/* Chosen color */}
-              {productColor && (
-                <div className="mt-2 flex items-center gap-2">
+              {/* Chosen color – displayed when client selected a color on the product page */}
+              {selectedColor && (
+                <div className="mt-2 flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-medium text-softBlack-600">
                     {t("color")}:
                   </span>
                   <span
-                    className="inline-block w-4 h-4 rounded-full border border-beige-300 flex-shrink-0"
+                    className="inline-block w-5 h-5 sm:w-5 sm:h-5 rounded-full border-2 border-beige-300 flex-shrink-0"
                     style={{
-                      backgroundColor: COLOR_HEX_MAP[productColor] ?? "#9ca3af",
+                      backgroundColor: COLOR_HEX_MAP[selectedColor] ?? "#9ca3af",
                     }}
                     aria-hidden
                   />
-                  <span className="text-sm text-softBlack-800">{productColor}</span>
+                  <span className="text-sm text-softBlack-800">{selectedColor}</span>
                 </div>
               )}
 
-              {/* Size selector */}
+              {/* Size selector – responsive, touch-friendly buttons */}
               {productSizes.length > 0 && (
                 <div className="mt-2">
                   <label className="text-xs font-medium text-softBlack-600">
                     {t("size")}
                   </label>
-                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-1">
+                  <div className="flex flex-wrap gap-2 sm:gap-2.5 mt-1.5">
                     {productSizes.map((size) => (
                       <button
                         key={size}
                         type="button"
                         onClick={() => setSelectedSize(size)}
-                        className={`min-h-[2.25rem] px-3 py-1.5 sm:py-2 text-xs rounded-full border transition-colors ${
+                        className={`min-h-[2.5rem] sm:min-h-[2.75rem] min-w-[2.5rem] px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-full border-2 transition-colors touch-manipulation ${
                           selectedSize === size
                             ? "bg-softBlack-900 text-white border-softBlack-900"
-                            : "border-beige-300 text-softBlack-600 hover:border-gold-500"
+                            : "border-beige-300 text-softBlack-600 hover:border-gold-500 active:border-gold-500"
                         }`}
                       >
                         {size}
@@ -300,26 +308,26 @@ function ContactFormInner() {
                 </div>
               )}
 
-              {/* Quantity */}
-              <div className="mt-2 flex items-center gap-2">
+              {/* Quantity – responsive, touch-friendly */}
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
                 <label className="text-xs font-medium text-softBlack-600">
                   {t("quantity")}
                 </label>
-                <div className="flex items-center border border-beige-200 rounded-lg">
+                <div className="flex items-center border-2 border-beige-200 rounded-xl overflow-hidden">
                   <button
                     type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-2.5 py-1 text-softBlack-600 hover:text-softBlack-900"
+                    className="min-h-[2.5rem] min-w-[2.5rem] sm:min-h-[2.75rem] sm:min-w-[2.75rem] px-2.5 py-1.5 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-100 active:bg-beige-200 transition-colors touch-manipulation"
                   >
                     −
                   </button>
-                  <span className="px-3 py-1 text-sm font-medium min-w-[2rem] text-center">
+                  <span className="px-3 py-1.5 text-sm font-medium min-w-[2.5rem] text-center border-x border-beige-200">
                     {quantity}
                   </span>
                   <button
                     type="button"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-2.5 py-1 text-softBlack-600 hover:text-softBlack-900"
+                    className="min-h-[2.5rem] min-w-[2.5rem] sm:min-h-[2.75rem] sm:min-w-[2.75rem] px-2.5 py-1.5 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-100 active:bg-beige-200 transition-colors touch-manipulation"
                   >
                     +
                   </button>
@@ -687,7 +695,7 @@ function ContactFormInner() {
             <input type="hidden" name="productPrice" value={productPrice || ""} />
             <input type="hidden" name="productImage" value={productImage || ""} />
             <input type="hidden" name="selectedSize" value={selectedSize} />
-            <input type="hidden" name="selectedColor" value={productColor} />
+            <input type="hidden" name="selectedColor" value={selectedColor} />
             <input type="hidden" name="quantity" value={String(quantity)} />
             <input type="hidden" name="shopSlug" value={shopSlug} />
             <input type="hidden" name="productSlug" value={productSlug} />

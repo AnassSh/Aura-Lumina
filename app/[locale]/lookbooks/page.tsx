@@ -50,6 +50,16 @@ export default async function LookbooksPage({
   const t = await getTranslations("lookbooks");
   const tProduct = await getTranslations("product");
 
+  // If the key has no translation (next-intl returns key or "lookbooks.key"), show the CMS value as literal text
+  const displayTitle = (key: string) => {
+    const translated = t(key);
+    return translated === key || translated.startsWith("lookbooks.") ? key : translated;
+  };
+  const displayDesc = (key: string) => {
+    const translated = t(key);
+    return translated === key || translated.startsWith("lookbooks.") ? key : translated;
+  };
+
   // Build translations object for client components
   const translations: Record<string, string> = {
     // Buy Now & Size
@@ -123,7 +133,7 @@ export default async function LookbooksPage({
                 <div className="relative aspect-[16/10]">
                   <Image
                     src={lookbook.image}
-                    alt={t(lookbook.titleKey)}
+                    alt={displayTitle(lookbook.titleKey)}
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
                     loading="lazy"
@@ -136,10 +146,10 @@ export default async function LookbooksPage({
                     {lookbook.itemCount} {t("pieces")}
                   </span>
                   <h3 className="text-2xl md:text-3xl font-serif font-bold text-white mb-2">
-                    {t(lookbook.titleKey)}
+                    {displayTitle(lookbook.titleKey)}
                   </h3>
                   <p className="text-beige-200 max-w-xl mb-4">
-                    {t(lookbook.descKey)}
+                    {displayDesc(lookbook.descKey)}
                   </p>
                   <span className="inline-flex items-center gap-2 text-white font-medium group-hover:text-gold-400 transition-colors">
                     {t("exploreCollection")}

@@ -11,10 +11,10 @@ import { ProductCard } from "@/components/ui/Card";
 import {
   getFeaturedAbayasAsync,
   getShopProductListingsAsync,
+  getEditorsPicksAsync,
   getBeautyTips,
   getLatestPosts,
   getShopTheLook,
-  getEditorsPicks,
 } from "@/lib/data";
 
 export async function generateMetadata({
@@ -34,12 +34,13 @@ export default async function HomePage() {
   const t = await getTranslations("home");
 
   // Data from Payload CMS or static fallback
-  const [featuredAbayas, shopProducts] = await Promise.all([
+  const [featuredAbayas, shopProducts, editorsPicksRaw] = await Promise.all([
     getFeaturedAbayasAsync(),
     getShopProductListingsAsync(),
+    getEditorsPicksAsync(),
   ]);
   const beautyTips = getBeautyTips();
-  const editorsPicks = getEditorsPicks().slice(0, 4);
+  const editorsPicks = editorsPicksRaw.slice(0, 4);
   const latestPosts = getLatestPosts();
   const shopTheLook = getShopTheLook();
 

@@ -90,14 +90,14 @@ export default function ProductActions({
             </span>
           )}
         </p>
-        <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="flex flex-wrap gap-2.5 sm:gap-3">
           {product.colors.map((color) => (
             <button
               key={color.name}
               type="button"
               title={color.name}
               onClick={() => setSelectedColor(color.name)}
-              className={`min-w-[2.5rem] min-h-[2.5rem] w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 transition-colors relative group flex-shrink-0 ${
+              className={`min-w-[2.75rem] min-h-[2.75rem] w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 transition-colors relative group flex-shrink-0 touch-manipulation active:scale-95 ${
                 selectedColor === color.name
                   ? "border-gold-500 ring-2 ring-gold-200"
                   : "border-beige-200 hover:border-gold-500"
@@ -117,13 +117,13 @@ export default function ProductActions({
         <p className="text-sm font-medium text-softBlack-800 mb-3">
           {t("selectSize")}
         </p>
-        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+        <div className="flex flex-wrap gap-2 sm:gap-2.5">
           {product.sizes.map((size) => (
             <button
               key={size}
               type="button"
               onClick={() => setSelectedSize(size)}
-              className={`min-h-[2.5rem] px-3 py-2 sm:px-4 border rounded-full text-xs sm:text-sm font-medium transition-colors ${
+              className={`min-h-[2.75rem] min-w-[2.75rem] px-3.5 py-2 sm:px-4 border-2 rounded-full text-xs sm:text-sm font-medium transition-colors touch-manipulation active:scale-[0.98] ${
                 selectedSize === size
                   ? "bg-softBlack-900 text-white border-softBlack-900"
                   : "border-beige-200 text-softBlack-700 hover:border-gold-500"
@@ -140,21 +140,21 @@ export default function ProductActions({
         <p className="text-sm font-medium text-softBlack-800 mb-3">
           {t("quantity")}
         </p>
-        <div className="inline-flex items-center border border-beige-200 rounded-xl">
+        <div className="inline-flex items-center border-2 border-beige-200 rounded-xl overflow-hidden">
           <button
             type="button"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-4 py-3 text-softBlack-600 hover:text-softBlack-900 transition-colors"
+            className="min-h-[2.75rem] min-w-[2.75rem] px-4 py-3 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-50 active:bg-beige-100 transition-colors touch-manipulation"
           >
             −
           </button>
-          <span className="px-4 py-3 text-sm font-semibold min-w-[3rem] text-center border-x border-beige-200">
+          <span className="px-4 py-3 text-sm font-semibold min-w-[3rem] text-center border-x-2 border-beige-200">
             {quantity}
           </span>
           <button
             type="button"
             onClick={() => setQuantity(quantity + 1)}
-            className="px-4 py-3 text-softBlack-600 hover:text-softBlack-900 transition-colors"
+            className="min-h-[2.75rem] min-w-[2.75rem] px-4 py-3 text-softBlack-600 hover:text-softBlack-900 hover:bg-beige-50 active:bg-beige-100 transition-colors touch-manipulation"
           >
             +
           </button>
