@@ -19,6 +19,7 @@ export default function ProductGrid({
 }: ProductGridProps) {
   const searchParams = useSearchParams();
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
+  const [selectedColors, setSelectedColors] = useState<Record<string, string>>({});
 
   const filteredProducts = useMemo(() => {
     const category = searchParams.get("category");
@@ -29,6 +30,10 @@ export default function ProductGrid({
 
   const setSize = (productId: string, size: string) => {
     setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
+  };
+
+  const setColor = (productId: string, color: string) => {
+    setSelectedColors((prev) => ({ ...prev, [productId]: color }));
   };
 
   if (filteredProducts.length === 0) {
@@ -46,6 +51,7 @@ export default function ProductGrid({
       {filteredProducts.map((product) => {
         const productTitle = translations[product.titleKey] || product.titleKey;
         const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
+        const selectedColor = selectedColors[product.id] ?? product.colors?.[0] ?? "";
         const params = new URLSearchParams({
           product: productTitle,
           price: product.price,
@@ -53,6 +59,7 @@ export default function ProductGrid({
         });
         if (selectedSize) params.set("size", selectedSize);
         if (product.sizes?.length) params.set("sizes", product.sizes.join(","));
+        if (selectedColor) params.set("color", selectedColor);
         const buyNowHref = `/contact?${params.toString()}`;
 
         return (
@@ -120,19 +127,26 @@ export default function ProductGrid({
                   </div>
                 )}
 
-                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-                  {product.colors?.map((color) => (
-                    <button
-                      key={color}
-                      type="button"
-                      title={color}
-                      className="min-w-[1.75rem] min-h-[1.75rem] w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-beige-200 hover:border-gold-500 transition-colors flex-shrink-0"
-                      style={{
-                        backgroundColor: colorToHex[color] ?? "#ddd",
-                      }}
-                    />
-                  ))}
-                </div>
+                {product.colors && product.colors.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                    {product.colors.map((color) => (
+                      <button
+                        key={color}
+                        type="button"
+                        title={color}
+                        onClick={() => setColor(product.id, color)}
+                        className={`min-w-[1.75rem] min-h-[1.75rem] w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 transition-colors flex-shrink-0 touch-manipulation ${
+                          selectedColor === color
+                            ? "border-gold-500 ring-1 ring-gold-300"
+                            : "border-beige-200 hover:border-gold-500"
+                        }`}
+                        style={{
+                          backgroundColor: colorToHex[color] ?? "#ddd",
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="px-5 pb-5 pt-2">
                 <Link

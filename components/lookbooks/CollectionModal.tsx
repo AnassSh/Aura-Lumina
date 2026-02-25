@@ -103,9 +103,14 @@ export default function CollectionModal({
   }, [selectedLookbook, collectionSlug, collectionProducts, placeholderProducts]);
 
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
+  const [selectedColors, setSelectedColors] = useState<Record<string, string>>({});
 
   const setSize = (productId: string, size: string) => {
     setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
+  };
+
+  const setColor = (productId: string, color: string) => {
+    setSelectedColors((prev) => ({ ...prev, [productId]: color }));
   };
 
   // Close modal function (stable reference for useEffect)
@@ -178,6 +183,7 @@ export default function CollectionModal({
                 const itemName = "name" in product ? (product as { name?: string }).name : `${collectionTitle} - ${translations["item"] || "Item"} ${index + 1}`;
                 const altText: string = itemName ?? "";
                 const selectedSize = selectedSizes[product.id] ?? product.sizes?.[0] ?? "";
+                const selectedColor = selectedColors[product.id] ?? product.colors?.[0] ?? "";
                 const params = new URLSearchParams({
                   product: String(itemName ?? ""),
                   price: String(product.price ?? ""),
@@ -185,6 +191,7 @@ export default function CollectionModal({
                 } as Record<string, string>);
                 if (selectedSize) params.set("size", selectedSize);
                 if (product.sizes?.length) params.set("sizes", product.sizes.join(","));
+                if (selectedColor) params.set("color", selectedColor);
                 const buyNowHref = `/contact?${params.toString()}`;
 
                 return (
@@ -242,18 +249,29 @@ export default function CollectionModal({
                           <span className="text-sm font-semibold text-gold-600">
                             {product.price}
                           </span>
-                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                            {(product.colors ?? []).map((color) => (
-                              <span
-                                key={color}
-                                title={color}
-                                className="min-w-[1rem] min-h-[1rem] w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-beige-200 flex-shrink-0"
-                                style={{
-                                  backgroundColor: colorToHex[color] ?? "#ddd",
-                                }}
-                              />
-                            ))}
-                          </div>
+                          {product.colors && product.colors.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
+                              <span className="text-[10px] sm:text-xs font-medium text-softBlack-500 mr-0.5">
+                                {translations["color"] || "Color"}:
+                              </span>
+                              {(product.colors ?? []).map((color) => (
+                                <button
+                                  key={color}
+                                  type="button"
+                                  title={color}
+                                  onClick={() => setColor(product.id, color)}
+                                  className={`min-w-[1.25rem] min-h-[1.25rem] w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex-shrink-0 transition-colors touch-manipulation ${
+                                    selectedColor === color
+                                      ? "border-gold-500 ring-1 ring-gold-300"
+                                      : "border-beige-200 hover:border-gold-400"
+                                  }`}
+                                  style={{
+                                    backgroundColor: colorToHex[color] ?? "#ddd",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="px-4 pb-4 pt-1">
