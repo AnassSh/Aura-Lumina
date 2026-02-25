@@ -7,7 +7,7 @@ import { routing } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 
 // Import from centralized data layer
-import { getShopsAsync, getAllShopSlugsAsync } from "@/lib/data";
+import { getShopAsync, getShopsAsync, getAllShopSlugsAsync } from "@/lib/data";
 
 // Static generation for all shop pages (per locale)
 export async function generateStaticParams() {
@@ -24,8 +24,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; shopSlug: string }>;
 }): Promise<Metadata> {
   const { shopSlug } = await params;
-  const shopsData = await getShopsAsync();
-  const shop = shopsData[shopSlug];
+  const shop = await getShopAsync(shopSlug);
 
   if (!shop) {
     return { title: "Shop Not Found" };
@@ -60,8 +59,7 @@ export default async function ShopProfilePage({
   params: Promise<{ locale: string; shopSlug: string }>;
 }) {
   const { shopSlug } = await params;
-  const shopsData = await getShopsAsync();
-  const shop = shopsData[shopSlug];
+  const shop = await getShopAsync(shopSlug);
   const t = await getTranslations("shops");
 
   if (!shop) {

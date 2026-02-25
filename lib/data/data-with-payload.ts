@@ -41,10 +41,20 @@ export async function getShopsAsync(): Promise<Record<string, Shop>> {
   return Object.keys(payloadShops).length > 0 ? payloadShops : shops
 }
 
-/** Single shop by slug */
+/** Single shop by slug – tries Payload again if not in main record (e.g. list from Payload, profile had fallen back to static) */
 export async function getShopAsync(slug: string): Promise<Shop | null> {
   const all = await getShopsAsync()
-  return all[slug] ?? null
+  const found = all[slug]
+  if (found) return found
+  if (isPayloadConfigured()) {
+    try {
+      const payloadShops = await getShopsFromPayload()
+      return payloadShops[slug] ?? null
+    } catch {
+      return null
+    }
+  }
+  return null
 }
 
 /** All shop slugs – for static params */

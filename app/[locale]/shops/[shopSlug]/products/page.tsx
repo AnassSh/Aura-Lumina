@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+import { getAllShopSlugsAsync, getShopAsync, getShopProductListingsAsync } from "@/lib/data";
 
 // Types
 interface Product {
@@ -108,9 +109,12 @@ const shopData: Record<
   },
 };
 
-// Generate static params
+// Generate static params (include Payload shop slugs so all shops are valid)
 export async function generateStaticParams() {
-  return Object.keys(shopData).map((shopSlug) => ({ shopSlug }));
+  const slugs = await getAllShopSlugsAsync();
+  return routing.locales.flatMap((locale) =>
+    slugs.map((shopSlug) => ({ locale, shopSlug }))
+  );
 }
 
 // Generate metadata
@@ -120,8 +124,32 @@ export async function generateMetadata({
   params: Promise<{ locale: string; shopSlug: string }>;
 }): Promise<Metadata> {
   const { shopSlug } = await params;
-  const data = shopData[shopSlug];
-  if (!data) return { title: "Shop Not Found" };
+  let data = shopData[shopSlug];
+  if (!data) {
+    const shop = await getShopAsync(shopSlug);
+    if (!shop) return { title: "Shop Not Found" };
+    const listings = await getShopProductListingsAsync();
+    const shopListings = listings.filter((l) => l.shopSlug === shopSlug);
+    data = {
+      shop: {
+        slug: shop.slug,
+        name: shop.name,
+        tagline: shop.tagline,
+        city: shop.location.city,
+        neighborhood: shop.location.neighborhood,
+        image: shop.image,
+      },
+      products: shopListings.map((l) => ({
+        slug: l.productSlug,
+        name: l.name,
+        price: l.price,
+        description: "",
+        images: [l.image],
+        category: "Abayas",
+      })),
+      categories: ["All", "Abayas"],
+    };
+  }
 
   const { shop } = data;
 
@@ -143,21 +171,45 @@ export default async function ShopProductsPage({
 }) {
   const { shopSlug } = await params;
   const t = await getTranslations("product");
-  const data = shopData[shopSlug];
+  let data = shopData[shopSlug];
 
   if (!data) {
-    return (
-      <div className="pt-32 pb-20 text-center">
-        <div className="container-custom">
-          <h1 className="text-4xl font-serif font-bold text-softBlack-900 mb-4">
-            Shop Not Found
-          </h1>
-          <Link href="/shops" className="btn-primary">
-            Browse All Shops
-          </Link>
+    const shop = await getShopAsync(shopSlug);
+    if (!shop) {
+      return (
+        <div className="pt-32 pb-20 text-center">
+          <div className="container-custom">
+            <h1 className="text-4xl font-serif font-bold text-softBlack-900 mb-4">
+              Shop Not Found
+            </h1>
+            <Link href="/shops" className="btn-primary">
+              Browse All Shops
+            </Link>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    const listings = await getShopProductListingsAsync();
+    const shopListings = listings.filter((l) => l.shopSlug === shopSlug);
+    data = {
+      shop: {
+        slug: shop.slug,
+        name: shop.name,
+        tagline: shop.tagline,
+        city: shop.location.city,
+        neighborhood: shop.location.neighborhood,
+        image: shop.image,
+      },
+      products: shopListings.map((l) => ({
+        slug: l.productSlug,
+        name: l.name,
+        price: l.price,
+        description: "",
+        images: [l.image],
+        category: "Abayas",
+      })),
+      categories: ["All", "Abayas"],
+    };
   }
 
   const { shop, products, categories } = data;
